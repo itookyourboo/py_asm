@@ -11,6 +11,7 @@ python = "^3.10"
 typer = "^0.7.0"
 pylint = "^2.15.7"
 flake8 = "^6.0.0"
+mypy = "^0.991"
 
 
 [build-system]
