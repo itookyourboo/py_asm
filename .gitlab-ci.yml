@@ -20,7 +20,7 @@ flake8:
     - merge_requests
   allow_failure: true
   script:
-    - flake8 .
+    - poetry run flake8 .
 
 pylint:
   stage: Static Analysis
@@ -29,4 +29,4 @@ pylint:
     - merge_requests
   allow_failure: true
   script:
-    - find . -type f -name "*.py" | xargs pylint
+    - poetry run `find . -type f -name "*.py" | xargs pylint`
