@@ -11,6 +11,9 @@ before_script:
   - poetry env use python3
   - poetry install --no-root
 
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
 cache:
   key:
     files:
@@ -33,11 +36,11 @@ flake8:
   script:
     - poetry run flake8 .
 
-pylint:
+mypy:
   stage: Static Analysis
   only:
     - master
     - merge_requests
   allow_failure: true
   script:
-    - poetry run `find . -type f -name "*.py" | xargs pylint`
+    - poetry run mypy .
