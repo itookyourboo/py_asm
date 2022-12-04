@@ -2,8 +2,8 @@ image:
   name: python-tools
 
 before_script:
-  - python --version
-  - pip install poetry
+  - python3 --version
+  - pip3 install poetry
   - poetry install
   - source `poetry env info --path /bin/activate`
 
