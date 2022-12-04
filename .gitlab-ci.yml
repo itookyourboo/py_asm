@@ -1,4 +1,6 @@
-image: python:3.10-slim-buster
+image:
+  name: python:3.10-slim-buster
+  pull_policy: if-not-present
 
 before_script:
   - python --version
