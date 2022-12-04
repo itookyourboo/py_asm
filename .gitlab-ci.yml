@@ -11,11 +11,11 @@ before_script:
 
 stages:
   - Static Analysis
+  - Testing
 
 flake8:
   stage: Static Analysis
   only:
-    - master
     - merge_requests
   allow_failure: true
   script:
@@ -24,17 +24,24 @@ flake8:
 pylint:
   stage: Static Analysis
   only:
-    - master
     - merge_requests
   allow_failure: true
   script:
-    - poetry run pylint main.py
+    - poetry run pylint main.py core test
 
 mypy:
   stage: Static Analysis
   only:
-    - master
     - merge_requests
   allow_failure: true
   script:
     - poetry run mypy .
+
+
+pytest:
+  stage: Testing
+  only:
+    - merge_requests
+  allow_failure: true
+  script:
+    - poetry run pytest test/

@@ -12,7 +12,7 @@ typer = "^0.7.0"
 pylint = "^2.15.7"
 flake8 = "^6.0.0"
 mypy = "^0.991"
-
+pytest = "^7.2.0"
 
 [build-system]
 requires = ["poetry-core"]
