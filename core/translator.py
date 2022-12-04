@@ -5,7 +5,7 @@ Translating .asm code into object file
 """
 
 
-from preprocessing import minify_text
+from .preprocessing import minify_text
 
 
 if __name__ == '__main__':

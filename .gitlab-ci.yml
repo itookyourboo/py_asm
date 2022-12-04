@@ -27,7 +27,7 @@ pylint:
     - merge_requests
   allow_failure: true
   script:
-    - poetry run pylint main.py core test
+    - poetry run pylint main.py core/ test/
 
 mypy:
   stage: Static Analysis
@@ -35,7 +35,7 @@ mypy:
     - merge_requests
   allow_failure: true
   script:
-    - poetry run mypy .
+    - poetry run mypy . --check-untyped-defs
 
 
 pytest:
