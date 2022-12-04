@@ -1,0 +1,29 @@
+default:
+  image: python:3.10-slim
+
+before_script:
+  - python --version
+  - pip install poetry
+  - poetry install
+  - source `poetry env info --path /bin/activate`
+
+stages:
+  - Static Analysis
+
+flake8:
+  stage: Static Analysis
+  only:
+    - master
+    - merge_requests
+  allow_failure: true
+  script:
+    - flake8 .
+
+pylint:
+  stage: Static Analysis
+  only:
+    - master
+    - merge_requests
+  allow_failure: true
+  script:
+    - find . -type f -name "*.py" | xargs pylint
