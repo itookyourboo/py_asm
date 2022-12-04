@@ -7,8 +7,19 @@ before_script:
   - python3 --version
   - pip3 install poetry
   - export PATH=$PATH:/root/.local/bin
+  - poetry config virtualenvs.in-project true
   - poetry env use python3
   - poetry install --no-root
+
+cache:
+  key:
+    files:
+      - poetry.lock
+      - .gitlab-ci.yml
+    prefix: ${CI_JOB_NAME}
+  paths:
+    - .venv
+    - .cache/pip
 
 stages:
   - Static Analysis
