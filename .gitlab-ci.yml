@@ -28,7 +28,7 @@ pylint:
     - merge_requests
   allow_failure: true
   script:
-    - poetry run flake8 .
+    - poetry run pylint main.py
 
 mypy:
   stage: Static Analysis
