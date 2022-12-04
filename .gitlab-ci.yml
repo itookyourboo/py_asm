@@ -3,6 +3,7 @@ image:
 
 before_script:
   - python3 --version
+  - apt-get install python3-pip
   - pip3 install poetry
   - poetry install
   - source `poetry env info --path /bin/activate`
