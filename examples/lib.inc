@@ -3,7 +3,7 @@ section .text
 
 ; Принимает код возврата и завершает текущий процесс
 exit:
-	xor rax,     rax
+	xor rax, rax
 	mov rax, 60
 	xor rdi, rdi
 	syscall

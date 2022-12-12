@@ -1,0 +1,86 @@
+{
+    "lines": [
+        {
+            "Label": {
+                "name": "prog"
+            }
+        },
+        {
+            "Instruction": {
+                "name": "XOR",
+                "info": {
+                    "InstructionInfo": {
+                        "operands": [
+                            {
+                                "Register": {
+                                    "name": "RAX",
+                                    "info": {
+                                        "RegisterInfo": {
+                                            "can_read": true,
+                                            "can_write": true,
+                                            "size": 4
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Register": {
+                                    "name": "RAX",
+                                    "info": {
+                                        "RegisterInfo": {
+                                            "can_read": true,
+                                            "can_write": true,
+                                            "size": 4
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "Instruction": {
+                "name": "ADD",
+                "info": {
+                    "InstructionInfo": {
+                        "operands": [
+                            {
+                                "Register": {
+                                    "name": "RAX",
+                                    "info": {
+                                        "RegisterInfo": {
+                                            "can_read": true,
+                                            "can_write": true,
+                                            "size": 4
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Number": 66
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "Instruction": {
+                "name": "CALL",
+                "info": {
+                    "InstructionInfo": {
+                        "operands": [
+                            {
+                                "Label": {
+                                    "name": "prog"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}
