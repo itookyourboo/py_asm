@@ -16,7 +16,7 @@ RE_NUM = rf'{RE_NEG}{RE_PNM}'
 
 RE_REG = r'|'.join(map(lambda reg: f'(%{reg})', RegisterController.keys()))
 
-RE_ADR = rf'#[a-zA-Z_][0-9a-zA-Z_]*'
+RE_ADR = r'#[a-zA-Z_][0-9a-zA-Z_]*'
 
 RE_OPR = rf'({RE_NUM})|({RE_REG})'
 
