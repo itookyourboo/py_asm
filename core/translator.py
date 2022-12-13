@@ -10,11 +10,13 @@ from types import UnionType
 from typing import Iterator, Type
 
 from core.exceptions import (
-    UndefinedInstruction, UndefinedLOC, UnexpectedOperand, UnexpectedArguments, UnexpectedDataValue, TextSectionNotFound
+    UndefinedInstruction, UndefinedLOC, UnexpectedOperand,
+    UnexpectedArguments, UnexpectedDataValue, TextSectionNotFound
 )
 from core.instructions import InstructionMemory
 from core.model import (
-    Instruction, LOC, Label, Operand, Number, String, Program, Address, DataSection, Constant, TextSection
+    Instruction, LOC, Label, Operand, Number,
+    String, Program, Address, DataSection, Constant, TextSection
 )
 from core.registers import RegisterController
 from core.util import (

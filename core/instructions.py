@@ -10,8 +10,15 @@ class InstructionMemory:
             (Address | Register, Address | Register | Constant)
         }),
         'ADD': InstructionInfo(operand_types={
-            (Address | Register, Address | Register | Number),
-            (Address | Register, Address | Register | Number, Address | Register | Number)
+            (
+                Address | Register,
+                Address | Register | Number
+            ),
+            (
+                Address | Register,
+                Address | Register | Number,
+                Address | Register | Number
+            )
         }),
         'AND': InstructionInfo(operand_types={
             (Address | Register, Address | Register | Number)
