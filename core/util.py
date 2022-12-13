@@ -4,16 +4,19 @@ Util-functions for working with data
 
 import re
 
-from core.model import Register
+from core.registers import RegisterController
 
 RE_NEG = r'-?'
 RE_HEX = r'0[xX][0-9a-fA-F]+'
 RE_OCT = r'0[oO][0-7]+'
 RE_BIN = r'0[bB][01]+'
 RE_DEC = r'[0-9]+'
-RE_NUM = rf'{RE_NEG}({RE_DEC}|{RE_BIN}|{RE_OCT}|{RE_HEX})'
+RE_PNM = rf'({RE_DEC}|{RE_BIN}|{RE_OCT}|{RE_HEX})'
+RE_NUM = rf'{RE_NEG}{RE_PNM}'
 
-RE_REG = r'|'.join(map(lambda reg: f'({reg})', Register.__members__.keys()))
+RE_REG = r'|'.join(map(lambda reg: f'(%{reg})', RegisterController.keys()))
+
+RE_ADR = rf'#[a-zA-Z_][0-9a-zA-Z_]*'
 
 RE_OPR = rf'({RE_NUM})|({RE_REG})'
 
@@ -60,6 +63,15 @@ def is_register(string: str) -> bool:
     return bool(
         re.fullmatch(
             RE_REG,
+            string.upper()
+        )
+    )
+
+
+def is_address(string: str) -> bool:
+    return bool(
+        re.fullmatch(
+            RE_ADR,
             string.upper()
         )
     )

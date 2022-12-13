@@ -4,7 +4,7 @@ echo '==[STATIC ANALYSIS]=='
 echo '=====FLAKE8====='
 flake8 .
 echo '=====PYLINT====='
-pylint main.py
+pylint ./main.py ./core/ ./test/
 echo '======MYPY======'
 mypy . --check-untyped-defs
 
