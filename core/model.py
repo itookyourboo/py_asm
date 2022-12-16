@@ -35,10 +35,27 @@ class RegisterInfo:
 class Register(Operand):
     value: str
 
+    def __str__(self) -> str:
+        return f'%{self.value}'
+
 
 @dataclass
 class Address(Operand):
-    value: str
+    value: str = ''
+    index: int = -1
+
+    def __str__(self) -> str:
+        return f'#{self.value}'
+
+
+@dataclass
+class IndirectAddress(Operand):
+    offset: Operand
+    value: str = ''
+    index: int = -1
+
+    def __str__(self) -> str:
+        return f'#{self.value}[{self.offset}]'
 
 
 class LOC:
@@ -58,12 +75,13 @@ class Instruction(LOC):
 
     def __str__(self) -> str:
         op_str: str = ', '.join(map(str, self.operands))
-        return f'{self.name} {op_str}'
+        return f'{self.name.upper()} {op_str}'
 
 
 @dataclass
 class DataSection:
-    data: dict[str, Constant] = field(default_factory=dict)
+    var_to_addr: dict[str, int] = field(default_factory=dict)
+    memory: list[int] = field(default_factory=list)
 
 
 @dataclass
@@ -78,5 +96,5 @@ class Program:
     text: TextSection = field(default_factory=TextSection)
 
 
-Destination: TypeAlias = Address | Register
-Source: TypeAlias = Address | Register | Constant
+Destination: TypeAlias = Address | IndirectAddress | Register
+Source: TypeAlias = Address | IndirectAddress | Register | Constant

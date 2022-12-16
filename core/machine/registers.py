@@ -1,5 +1,6 @@
 from typing import Iterator
 
+from core.machine.arithmetic import _strip_number
 from core.model import RegisterInfo, Register
 
 
@@ -40,6 +41,7 @@ __available_registers__ = {
     'RBX': _register_data(),
     'RCX': _register_data(),
     'RDX': _register_data(),
+    'RSX': _register_data(),
 
     'RIP': _register_pointer(),
     'RSP': _register_pointer(),
@@ -61,8 +63,8 @@ class RegisterController:
     def get(self, register: Register) -> int:
         return self.__states__[register.value]
 
-    def set(self, register: Register, value: int) -> None:
-        self.__states__[register.value] = value
+    def set(self, register: Register, value: int | str) -> None:
+        self.__states__[register.value] = _strip_number(value)
 
     def get_instruction_pointer(self) -> int:
         return self.__states__['RIP']

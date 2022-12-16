@@ -1,55 +1,76 @@
 from typing import Callable
 
-from core.model import Register, Address, Label, Destination, Source
+from core.model import Register, Address, Label, Destination, Source, IndirectAddress
 
 
 class InstructionSet:
-    def i_add(self, dest: Destination, *ops: Source):
+    def i_add(self, dest: Destination, *ops: Source) -> None:
         raise NotImplementedError
 
-    def i_sub(self, dest: Destination, *ops: Source):
+    def i_sub(self, dest: Destination, *ops: Source) -> None:
         raise NotImplementedError
 
-    def i_mul(self, dest: Destination, *ops: Source):
+    def i_mul(self, dest: Destination, *ops: Source) -> None:
         raise NotImplementedError
 
-    def i_div(self, dest: Destination, *ops: Source):
+    def i_div(self, dest: Destination, *ops: Source) -> None:
         raise NotImplementedError
 
-    def i_xor(self, dest: Destination, *ops: Source):
+    def i_mod(self, dest: Destination, *ops: Source) -> None:
         raise NotImplementedError
 
-    def i_and(self, dest: Destination, *ops: Source):
+    def i_xor(self, dest: Destination, *ops: Source) -> None:
         raise NotImplementedError
 
-    def i_or(self, dest: Destination, *ops: Source):
+    def i_and(self, dest: Destination, *ops: Source) -> None:
         raise NotImplementedError
 
-    def i_dec(self, dest: Destination):
+    def i_or(self, dest: Destination, *ops: Source) -> None:
         raise NotImplementedError
 
-    def i_inc(self, dest: Destination):
+    def i_dec(self, dest: Destination) -> None:
         raise NotImplementedError
 
-    def i_jmp(self, label: Label):
+    def i_inc(self, dest: Destination) -> None:
         raise NotImplementedError
 
-    def i_call(self, label: Label):
+    def i_jmp(self, label: Label) -> None:
         raise NotImplementedError
 
-    def i_mov(self, dest: Destination, src: Source):
+    def i_je(self, label: Label) -> None:
         raise NotImplementedError
 
-    def i_ld(self, register: Register, address: Address):
+    def i_jne(self, label: Label) -> None:
         raise NotImplementedError
 
-    def i_cmp(self, var: Destination, op: Source):
+    def i_jl(self, label: Label) -> None:
         raise NotImplementedError
 
-    def i_ret(self):
+    def i_jg(self, label: Label) -> None:
         raise NotImplementedError
 
-    def i_hlt(self):
+    def i_jle(self, label: Label) -> None:
+        raise NotImplementedError
+
+    def i_jge(self, label: Label) -> None:
+        raise NotImplementedError
+
+    def i_mov(self, dest: Destination, src: Source) -> None:
+        raise NotImplementedError
+
+    def i_ld(self, register: Register, address: Address | IndirectAddress) -> None:
+        raise NotImplementedError
+
+    def i_cmp(self, var: Destination, op: Source) -> None:
+        raise NotImplementedError
+
+    def i_putc(self, op: Source) -> None:
+        raise NotImplementedError
+
+    def i_getc(self, dest: Destination) -> None:
+        raise NotImplementedError
+
+    def i_hlt(self) -> None:
         raise NotImplementedError
 
     @classmethod

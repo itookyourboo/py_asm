@@ -16,14 +16,20 @@ RE_NUM = rf'{RE_NEG}{RE_PNM}'
 
 RE_REG = r'|'.join(map(lambda reg: f'(%{reg})', RegisterController.keys()))
 
-RE_ADR = r'#[a-zA-Z_][0-9a-zA-Z_]*'
-
 RE_OPR = rf'({RE_NUM})|({RE_REG})'
 
-RE_STR = r'^[\'\"].*[\'\"]$'
-RE_EXP = rf'\[({RE_OPR})[\+\-]({RE_OPR})\]'
-
 RE_LBL = r'\.?[a-zA-Z_]+'
+
+RE_STR = r'^[\'\"].*[\'\"]$'
+
+RE_VAR = r'[a-zA-Z_][0-9a-zA-Z_]*'
+
+RE_DAD = rf'#{RE_VAR}'
+RE_IAD = rf'#{RE_VAR}\[({RE_OPR})\]'
+
+RE_ILR = rf'\[({RE_VAR})([+-])({RE_REG})\]'
+RE_IRG = rf'\[({RE_REG})\]'
+RE_ADR = rf'({RE_DAD})|({RE_ILR})|({RE_IRG})'
 
 
 def is_number(string: str) -> bool:
@@ -68,19 +74,28 @@ def is_register(string: str) -> bool:
     )
 
 
-def is_address(string: str) -> bool:
+def is_direct_address(string: str) -> bool:
     return bool(
         re.fullmatch(
-            RE_ADR,
+            RE_DAD,
             string.upper()
         )
     )
 
 
-def is_expression(string: str) -> bool:
+def is_indirect_address(string: str) -> bool:
     return bool(
         re.fullmatch(
-            RE_EXP,
+            RE_IAD,
+            string.upper()
+        )
+    )
+
+
+def is_address(string: str) -> bool:
+    return bool(
+        re.fullmatch(
+            RE_ADR,
             string.upper()
         )
     )
