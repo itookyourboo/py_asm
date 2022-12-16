@@ -1,8 +1,7 @@
 import pickle
 
 from core.model import Program
-from core.preprocessing import minify_text
-from core.translator import parse_code
+from core.translator import minify_text, parse_code
 
 
 def translate_asm_file(asm_file_name: str, object_file_name: str) -> None:

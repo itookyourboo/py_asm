@@ -53,24 +53,29 @@ __available_registers__ = {
 
 
 class RegisterController:
-    __states__ = {
-        register_name: Register(
-            name=register_name,
-            info=__available_registers__[register_name]
-        ) for register_name in __available_registers__
-    }
+    def __init__(self):
+        self.__states__: dict[str, int] = {
+            register: 0 for register in self.keys()
+        }
+
+    def get(self, register: Register) -> int:
+        return self.__states__[register.value]
+
+    def set(self, register: Register, value: int) -> None:
+        self.__states__[register.value] = value
+
+    def get_instruction_pointer(self) -> int:
+        return self.__states__['RIP']
+
+    def set_instruction_pointer(self, pointer: int) -> None:
+        self.__states__['RIP'] = pointer
+
+    def __repr__(self) -> str:
+        return str(self.__states__)
 
     @staticmethod
     def contains(register_name: str) -> bool:
-        return register_name in __available_registers__
-
-    @staticmethod
-    def get_info(register_name: str) -> RegisterInfo:
-        return __available_registers__[register_name]
-
-    @classmethod
-    def get(cls, register_name: str) -> Register:
-        return cls.__states__[register_name]
+        return register_name in RegisterController.keys()
 
     @staticmethod
     def keys() -> Iterator[str]:

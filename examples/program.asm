@@ -6,7 +6,15 @@ section .data
 
 section .text
     XOR %rax, %rax      ; clear rax
-    MOV %rdx, 0          ; clear rdx
+    MOV %rdx, 0         ; clear rdx
     LD %rax, #A         ; load #A into %rax
     LD %rdx, #B         ; load #B into %rdx
     ADD #C, %rax, %rdx  ; save sum of %rax and %rdx into #C
+    JMP .inc_rax
+    XOR %rax, %rax
+    .inc_rax:
+        INC %rax
+        JMP .exit
+    DEC %rax
+    .exit:
+        HLT

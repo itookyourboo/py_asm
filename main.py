@@ -3,12 +3,12 @@ CLI interface to translate and execute assembler
 """
 import warnings
 from typing import Optional
-from pprint import pprint
 
 import typer
 
 from core.io import translate_asm_file, read_program_from_file
 from core.model import Program
+from core.machine import ProgramExecutor
 
 app = typer.Typer(help='Assembler translator')
 
@@ -40,7 +40,8 @@ def execute(obj_file_name: str):
     typer.echo(f'Executing {obj_file_name}...')
 
     program: Program = read_program_from_file(obj_file_name)
-    pprint(program)
+    executor: ProgramExecutor = ProgramExecutor(program)
+    executor.execute()
 
 
 if __name__ == '__main__':

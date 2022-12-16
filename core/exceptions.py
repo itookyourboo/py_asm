@@ -52,3 +52,34 @@ class TextSectionNotFound(_Exception):
     in assembly code not found
     """
     pass
+
+
+class DataNotFound(_Exception):
+    """
+    Invoked when variable in data section not found
+    """
+    pass
+
+
+class IncorrectDataType(_Exception):
+    """
+    Invoked when needed data has another type
+    """
+
+
+class ConstantIsNotWriteable(_Exception):
+    """
+    Invoked when trying to write in constant
+    """
+
+
+class NoSuchLabel(_Exception):
+    """
+    Invoked when translator can not find label
+    """
+
+
+class ProgramExit(_Exception):
+    """
+    End of program
+    """
