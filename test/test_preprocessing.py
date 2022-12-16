@@ -4,7 +4,7 @@ Unit-tests for preprocessing module
 
 import unittest
 
-from core.preprocessing import minify_text
+from core.translator.preprocessing import minify_text
 
 
 class TestPreprocessing(unittest.TestCase):

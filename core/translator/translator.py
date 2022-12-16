@@ -6,23 +6,21 @@ Translating .asm code into object file
 """
 import pickle
 import warnings
-from types import UnionType
-from typing import Iterator, Type
+from typing import Iterator
 
 from core.exceptions import (
     UndefinedInstruction, UndefinedLOC, UnexpectedOperand,
-    UnexpectedArguments, UnexpectedDataValue, TextSectionNotFound
+    UnexpectedDataValue, TextSectionNotFound, NoSuchLabel
 )
-from core.instructions import InstructionMemory
+from core.machine.instructions import InstructionSet
 from core.model import (
     Instruction, LOC, Label, Operand, Number,
-    String, Program, Address, DataSection, Constant, TextSection
+    String, Program, Address, DataSection, Constant, TextSection, Register
 )
-from core.registers import RegisterController
-from core.util import (
+from core.translator.util import (
     is_number, is_string, is_register, is_label, convert_to_number, is_address
 )
-from core.preprocessing import minify_text
+from core.translator.preprocessing import minify_text
 
 
 def parse_operand(operand_str: str) -> Operand:
@@ -31,16 +29,19 @@ def parse_operand(operand_str: str) -> Operand:
     if is_string(operand_str):
         return String(value=operand_str[1:-1])
     if is_register(operand_str):
-        return RegisterController.get(operand_str.upper()[1:])
+        return Register(operand_str.upper()[1:])
     if is_address(operand_str):
-        return Address(value=convert_to_number(operand_str[1:]))
+        return Address(operand_str[1:])
     if is_label(operand_str):
-        return Label(name=operand_str)
+        return Label(value=operand_str)
 
     raise UnexpectedOperand(f'"{operand_str}"')
 
 
 def parse_operands(line: str) -> list[Operand]:
+    if not line:
+        return []
+
     if ',' not in line:
         pass
 
@@ -54,39 +55,47 @@ def fill_operand_values(
         instruction: Instruction,
         operands: list[Operand]
 ) -> None:
-    inst_types: tuple[UnionType | Type, ...]
-    for inst_types in instruction.info.operand_types:
-        if len(operands) != len(inst_types):
-            continue
-
-        if all(
-                isinstance(op, inst_type)
-                for op, inst_type in zip(operands, inst_types)
-        ):
-            instruction.info.operand_values.extend(operands)
-            break
-    else:
-        op_types: list[Type] = list(map(type, operands))
-        expected: list[tuple[UnionType | Type[Operand], ...]] = list(
-            instruction.info.operand_types
-        )
-        raise UnexpectedArguments(
-            f'Instruction {instruction.name}.\n'
-            f'Given: {op_types!r}\n'
-            f'Expected: {expected!r}'
-        )
+    instruction.operands.extend(operands)
+    # inst_types: tuple[UnionType | Type, ...]
+    # if not instruction.info.operand_types:
+    #     return
+    #
+    # for inst_types in instruction.info.operand_types:
+    #     if len(operands) != len(inst_types):
+    #         continue
+    #
+    #     if all(
+    #             isinstance(op, inst_type)
+    #             for op, inst_type in zip(operands, inst_types)
+    #     ):
+    #         instruction.info.operand_values.extend(operands)
+    #         return
+    #
+    # op_types: list[Type] = list(map(type, operands))
+    # expected: list[tuple[UnionType | Type[Operand], ...]] = list(
+    #     instruction.info.operand_types
+    # )
+    # raise UnexpectedArguments(
+    #     f'Instruction {instruction.name}.\n'
+    #     f'Given: {op_types!r}\n'
+    #     f'Expected: {expected!r}'
+    # )
 
 
 def parse_instruction(line: str) -> Instruction:
     cmd: str
-    operands_str: str
+    operands_str: str = ''
 
-    cmd, operands_str = line.split(' ', 1)
-    cmd = cmd.upper()
-    if not InstructionMemory.contains(cmd):
+    if ' ' not in line:
+        cmd = line
+    else:
+        cmd, operands_str = line.split(' ', 1)
+
+    cmd = cmd.lower()
+    if cmd not in InstructionSet.get_all():
         raise UndefinedInstruction(cmd)
 
-    instruction: Instruction = InstructionMemory.get(cmd)
+    instruction: Instruction = Instruction(cmd)
     operands: list[Operand] = parse_operands(operands_str)
     fill_operand_values(instruction, operands)
 
@@ -139,17 +148,17 @@ def parse_data_section(code: str) -> DataSection:
 
 def parse_text_section(code: str) -> TextSection:
     labels: dict[str, int] = {}
-    lines: list[LOC] = []
+    lines: list[Instruction] = []
 
     line: str
     for line in code.splitlines():
         loc: LOC
         for loc in parse_line(line):
             if isinstance(loc, Label):
-                if loc.name in labels:
-                    warnings.warn(f'Redefinition of label "{loc.name}"')
+                if loc.value in labels:
+                    warnings.warn(f'Redefinition of label "{loc.value}"')
 
-                labels[loc.name] = len(lines)
+                labels[loc.value] = len(lines)
             elif isinstance(loc, Instruction):
                 lines.append(loc)
             else:
@@ -157,6 +166,15 @@ def parse_text_section(code: str) -> TextSection:
                     f'Incorrect LOC type: {type(loc)}. '
                     f'Expected {LOC.__subclasses__()}'
                 )
+
+    inst: Instruction
+    for i, inst in enumerate(lines):
+        for operand in inst.operands:
+            if not isinstance(operand, Label):
+                continue
+            if operand.value not in labels:
+                raise NoSuchLabel
+            operand.index = labels[operand.value]
 
     return TextSection(
         labels=labels,
@@ -197,8 +215,8 @@ def parse_code(code: str) -> Program:
 if __name__ == '__main__':
     from pprint import pprint
 
-    source = '../examples/program.asm'
-    dest = '../examples/program.asm.o'
+    source = '../examples/simple.asm'
+    dest = '../examples/simple.asm.o'
 
     # translating
     with open(source) as file:

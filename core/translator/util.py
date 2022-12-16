@@ -4,7 +4,7 @@ Util-functions for working with data
 
 import re
 
-from core.registers import RegisterController
+from core.machine.registers import RegisterController
 
 RE_NEG = r'-?'
 RE_HEX = r'0[xX][0-9a-fA-F]+'

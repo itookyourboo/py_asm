@@ -1,10 +1,12 @@
 from dataclasses import dataclass, field
-from types import UnionType
-from typing import Type, Callable
+from typing import TypeAlias
 
 
 class Operand:
-    pass
+    value: str | int
+
+    def __str__(self) -> str:
+        return str(self.value)
 
 
 @dataclass
@@ -28,24 +30,15 @@ class RegisterInfo:
     can_write: bool
     size: int
 
-    value: int = 0
-
-
-@dataclass
-class Expression:
-    operations: list[Callable]
-    operands: list[Operand]
-
 
 @dataclass
 class Register(Operand):
-    name: str
-    info: RegisterInfo
+    value: str
 
 
 @dataclass
 class Address(Operand):
-    value: int
+    value: str
 
 
 class LOC:
@@ -54,19 +47,18 @@ class LOC:
 
 @dataclass
 class Label(LOC, Operand):
-    name: str
-
-
-@dataclass
-class InstructionInfo:
-    operand_types: set[tuple[UnionType | Type[Operand], ...]]
-    operand_values: list[Operand] = field(default_factory=list)
+    value: str
+    index: int = -1
 
 
 @dataclass
 class Instruction(LOC):
     name: str
-    info: InstructionInfo
+    operands: list[Operand] = field(default_factory=list)
+
+    def __str__(self) -> str:
+        op_str: str = ', '.join(map(str, self.operands))
+        return f'{self.name} {op_str}'
 
 
 @dataclass
@@ -77,10 +69,14 @@ class DataSection:
 @dataclass
 class TextSection:
     labels: dict[str, int] = field(default_factory=dict)
-    lines: list[LOC] = field(default_factory=list)
+    lines: list[Instruction] = field(default_factory=list)
 
 
 @dataclass
 class Program:
     data: DataSection = field(default_factory=DataSection)
     text: TextSection = field(default_factory=TextSection)
+
+
+Destination: TypeAlias = Address | Register
+Source: TypeAlias = Address | Register | Constant

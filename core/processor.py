@@ -1,3 +1,0 @@
-"""
-Executing object file
-"""
