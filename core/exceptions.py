@@ -3,83 +3,101 @@ Custom exceptions
 """
 
 
-class _Exception(Exception):
+class PyAsmException(Exception):
     """
     Base Exception class
     """
     pass
 
 
-class UndefinedInstruction(_Exception):
+class UndefinedInstruction(PyAsmException):
     """
-    Invoked when user writes some undefined instruction in code
-    """
-    pass
-
-
-class UndefinedLOC(_Exception):
-    """
-    Invoked when translator can't classify line as Label or Instruction
+    Raised when there is no such instruction
     """
     pass
 
 
-class UnexpectedOperand(_Exception):
+class UndefinedLOC(PyAsmException):
     """
-    Invoked when translator couldn't parse operand
-    """
-    pass
-
-
-class UnexpectedArguments(_Exception):
-    """
-    Invoked when instruction argument type doesn't match expected
+    Raised when translator can't classify line as Label or Instruction
     """
     pass
 
 
-class UnexpectedDataValue(_Exception):
+class UnexpectedOperand(PyAsmException):
     """
-    Invoked when data value is neither number nor string
+    Raised when translator couldn't parse operand
     """
     pass
 
 
-class TextSectionNotFound(_Exception):
+class UnexpectedArguments(PyAsmException):
     """
-    Invoked when
+    Raised when instruction argument type doesn't match expected
+    """
+    pass
+
+
+class NotEnoughOperands(PyAsmException):
+    """
+    Raised when instruction needs more operands
+    """
+    pass
+
+
+class UnexpectedDataValue(PyAsmException):
+    """
+    Raised when data value is neither number nor string
+    """
+    pass
+
+
+class TextSectionNotFound(PyAsmException):
+    """
+    Raised when
         section .text
     in assembly code not found
     """
     pass
 
 
-class DataNotFound(_Exception):
+class DataNotFound(PyAsmException):
     """
-    Invoked when variable in data section not found
+    Raised when variable in data section not found
     """
     pass
 
 
-class IncorrectDataType(_Exception):
+class IncorrectDataType(PyAsmException):
     """
-    Invoked when needed data has another type
+    Raised when needed data has another type
     """
+    pass
 
 
-class ConstantIsNotWriteable(_Exception):
+class ConstantIsNotWriteable(PyAsmException):
     """
-    Invoked when trying to write in constant
+    Raised when trying to write in constant
     """
+    pass
 
 
-class NoSuchLabel(_Exception):
+class NoSuchLabel(PyAsmException):
     """
-    Invoked when translator can not find label
+    Raised when translator can not find label
     """
+    pass
 
 
-class ProgramExit(_Exception):
+class ProgramExit(PyAsmException):
     """
     End of program
     """
+    pass
+
+
+class NumberOutOfRange(PyAsmException):
+    """
+    Raised when number in code is out of range
+    """
+    pass

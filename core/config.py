@@ -2,3 +2,9 @@ N_BITS = 16
 
 MAX_NUM = 2 ** (N_BITS - 1) - 1
 MIN_NUM = -2 ** (N_BITS - 1)
+
+MEMORY_SIZE = 128
+
+NULL_TERM = 0x00
+
+IO_BUFFER_SIZE = 256

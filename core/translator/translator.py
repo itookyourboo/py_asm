@@ -5,20 +5,23 @@
 Translating .asm code into object file
 """
 import pickle
+import re
 import warnings
 from typing import Iterator
 
+from core.config import MIN_NUM, MAX_NUM, NULL_TERM
 from core.exceptions import (
     UndefinedInstruction, UndefinedLOC, UnexpectedOperand,
-    UnexpectedDataValue, TextSectionNotFound, NoSuchLabel
+    UnexpectedDataValue, TextSectionNotFound, NoSuchLabel, NumberOutOfRange
 )
 from core.machine.instructions import InstructionSet
 from core.model import (
     Instruction, LOC, Label, Operand, Number,
-    String, Program, Address, DataSection, Constant, TextSection, Register
+    String, Program, Address, DataSection, Constant, TextSection, Register, IndirectAddress
 )
 from core.translator.util import (
-    is_number, is_string, is_register, is_label, convert_to_number, is_address
+    is_number, is_string, is_register, is_label, convert_to_number, is_address,
+    is_direct_address, is_indirect_address
 )
 from core.translator.preprocessing import minify_text
 
@@ -27,11 +30,20 @@ def parse_operand(operand_str: str) -> Operand:
     if is_number(operand_str):
         return Number(value=convert_to_number(operand_str))
     if is_string(operand_str):
-        return String(value=operand_str[1:-1])
+        operand_str = operand_str[1:-1]
+        return String(value=operand_str)
     if is_register(operand_str):
         return Register(operand_str.upper()[1:])
-    if is_address(operand_str):
-        return Address(operand_str[1:])
+    if is_indirect_address(operand_str):
+        base, offset = operand_str.split('[')
+        base = base[1:]
+        offset = offset[:-1]
+        return IndirectAddress(
+            value=base,
+            offset=parse_operand(offset)
+        )
+    if is_direct_address(operand_str):
+        return Address(value=operand_str[1:])
     if is_label(operand_str):
         return Label(value=operand_str)
 
@@ -56,30 +68,6 @@ def fill_operand_values(
         operands: list[Operand]
 ) -> None:
     instruction.operands.extend(operands)
-    # inst_types: tuple[UnionType | Type, ...]
-    # if not instruction.info.operand_types:
-    #     return
-    #
-    # for inst_types in instruction.info.operand_types:
-    #     if len(operands) != len(inst_types):
-    #         continue
-    #
-    #     if all(
-    #             isinstance(op, inst_type)
-    #             for op, inst_type in zip(operands, inst_types)
-    #     ):
-    #         instruction.info.operand_values.extend(operands)
-    #         return
-    #
-    # op_types: list[Type] = list(map(type, operands))
-    # expected: list[tuple[UnionType | Type[Operand], ...]] = list(
-    #     instruction.info.operand_types
-    # )
-    # raise UnexpectedArguments(
-    #     f'Instruction {instruction.name}.\n'
-    #     f'Given: {op_types!r}\n'
-    #     f'Expected: {expected!r}'
-    # )
 
 
 def parse_instruction(line: str) -> Instruction:
@@ -93,7 +81,11 @@ def parse_instruction(line: str) -> Instruction:
 
     cmd = cmd.lower()
     if cmd not in InstructionSet.get_all():
-        raise UndefinedInstruction(cmd)
+        err_template: str = '-->{}<--'
+        raise UndefinedInstruction(
+            line.replace(cmd, err_template.format(cmd))
+            .replace(cmd.upper(), err_template.format(cmd.upper()))
+        )
 
     instruction: Instruction = Instruction(cmd)
     operands: list[Operand] = parse_operands(operands_str)
@@ -122,28 +114,68 @@ def parse_line(line: str) -> Iterator[LOC]:
 def parse_data_line(line: str) -> tuple[str, Constant]:
     key, value = map(str.strip, line.split(':', 1))
 
+    if value.startswith('buf '):
+        _, count = value.split(None, 1)
+        buffer = chr(NULL_TERM) * int(count)
+        return key, String(value=buffer)
+
     constant: Constant
     if is_number(value):
         constant = Number(value=convert_to_number(value))
     elif is_string(value):
-        constant = String(value=value[1:-1])
+        value = value[1:-1]
+        value = value.replace('\\n', '\n')
+        constant = String(value=value)
     else:
         raise UnexpectedDataValue
 
     return key, constant
 
 
+def linearize_const(const: Constant) -> Iterator[int]:
+    if isinstance(const, Number):
+        if not (MIN_NUM <= const.value <= MAX_NUM):
+            raise NumberOutOfRange(
+                f'Number should be in range [{MIN_NUM}; {MAX_NUM}]'
+            )
+        yield const.value
+    else:
+        yield from map(ord, const.value.replace('\\\\', '\\'))
+        yield NULL_TERM
+
+
 def parse_data_section(code: str) -> DataSection:
-    data: dict[str, Constant] = {}
+    data: dict[str, int] = {}
+    memory: list[int] = []
 
     for line in code.splitlines():
         key, constant = parse_data_line(line)
         if key in data:
             warnings.warn(f'Redefinition of variable "{key}": '
                           f'{data[key]} -> {constant}')
-        data[key] = constant
+        data[key] = len(memory)
+        memory.extend(linearize_const(constant))
 
-    return DataSection(data=data)
+    return DataSection(
+        var_to_addr=data,
+        memory=memory
+    )
+
+
+def set_labels_indexes(
+        lines: list[Instruction],
+        labels: dict[str, int]
+) -> None:
+    i: int
+    inst: Instruction
+    for i, inst in enumerate(lines):
+        operand: Operand
+        for operand in inst.operands:
+            if not isinstance(operand, Label):
+                continue
+            if operand.value not in labels:
+                raise NoSuchLabel
+            operand.index = labels[operand.value]
 
 
 def parse_text_section(code: str) -> TextSection:
@@ -167,19 +199,24 @@ def parse_text_section(code: str) -> TextSection:
                     f'Expected {LOC.__subclasses__()}'
                 )
 
-    inst: Instruction
-    for i, inst in enumerate(lines):
-        for operand in inst.operands:
-            if not isinstance(operand, Label):
-                continue
-            if operand.value not in labels:
-                raise NoSuchLabel
-            operand.index = labels[operand.value]
+    set_labels_indexes(lines, labels)
 
     return TextSection(
         labels=labels,
         lines=lines
     )
+
+
+def set_addresses_indexes(
+        lines: list[Instruction],
+        var_to_addr: dict[str, int]
+) -> None:
+    inst: Instruction
+    for inst in lines:
+        op: Operand
+        for op in inst.operands:
+            if isinstance(op, (Address, IndirectAddress)):
+                op.index = var_to_addr[op.value]
 
 
 _SECTION_TEXT = 'section .text'
@@ -206,17 +243,23 @@ def parse_code(code: str) -> Program:
     else:
         data_stop = text_index - 1
 
-    return Program(
+    program: Program = Program(
         data=parse_data_section(code[data_start:data_stop]),
         text=parse_text_section(code[text_start:text_stop])
     )
+
+    set_addresses_indexes(program.text.lines, program.data.var_to_addr)
+
+    return program
 
 
 if __name__ == '__main__':
     from pprint import pprint
 
-    source = '../examples/simple.asm'
-    dest = '../examples/simple.asm.o'
+    filename = 'cat'
+
+    source = f'../examples/{filename}.pyasm'
+    dest = f'../examples/{filename}.pyasm.o'
 
     # translating
     with open(source) as file:
