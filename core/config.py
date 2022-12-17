@@ -1,4 +1,4 @@
-N_BITS = 16
+N_BITS = 32
 
 MAX_NUM = 2 ** (N_BITS - 1) - 1
 MIN_NUM = -2 ** (N_BITS - 1)

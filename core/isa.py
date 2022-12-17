@@ -70,6 +70,12 @@ class InstructionSet:
     def i_getc(self, dest: Destination) -> None:
         raise NotImplementedError
 
+    def i_putn(self, op: Source) -> None:
+        raise NotImplementedError
+
+    def i_getn(self, dest: Destination) -> None:
+        raise NotImplementedError
+
     def i_hlt(self) -> None:
         raise NotImplementedError
 
