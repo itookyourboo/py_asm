@@ -198,6 +198,12 @@ class InstructionController(InstructionSet):
     def i_getc(self, dest: Destination) -> None:
         self.set(dest, self.io.getc())
 
+    def i_putn(self, op: Source) -> None:
+        self.io.putn(self.get(op))
+
+    def i_getn(self, dest: Destination) -> None:
+        self.set(dest, self.io.getn())
+
     def i_hlt(self) -> None:
         raise ProgramExit
 

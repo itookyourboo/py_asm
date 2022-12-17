@@ -1,0 +1,24 @@
+section .data
+    MAX_DIVIDER: 20
+    NEW_LINE: '\n'
+    STEP: 0
+
+section .text
+    XOR %rax, %rax
+    MUL #STEP, 2, 3, 5, 7, 11, 13, 17, 19
+    .next_number:
+        ADD %rax, #STEP
+        XOR %rdx, %rdx
+    .next_divider:
+        INC %rdx
+        MOD %rbx, %rax, %rdx
+        JNE .next_number
+
+        CMP %rdx, #MAX_DIVIDER
+        JE .exit
+
+        JMP .next_divider
+    .exit:
+        PUTN %rax
+        PUTC #NEW_LINE
+        HLT

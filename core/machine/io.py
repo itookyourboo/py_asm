@@ -23,3 +23,10 @@ class IOController:
         except StopIteration:
             self.stdin = None
             return NULL_TERM
+
+    def putn(self, number: int) -> None:
+        print(number, end='')
+
+    def getn(self) -> int:
+        result: int = int(''.join(map(chr, self._getc())).strip())
+        return result

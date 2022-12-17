@@ -1,6 +1,6 @@
 section .data
     NULL_TERM: 0x00
-    STRING: buf 28
+    STRING: buf 32
 
 section .text
     .read_string:

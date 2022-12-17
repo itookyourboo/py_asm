@@ -7,7 +7,7 @@ from typing import Optional, Type
 import typer
 
 from core.exceptions import PyAsmException
-from core.io import translate_asm_file, read_program_from_file
+from core.file_helper import translate_asm_file, read_program_from_file
 from core.model import Program
 from core.machine import ProgramExecutor
 
@@ -29,11 +29,11 @@ def print_exception(error: PyAsmException) -> None:
 
 
 @app.command(name="translate")
-def translate_cmd(
+def translate(
         asm_file_name: str,
         object_file_name: Optional[str] = None,
         verbose: Optional[bool] = False
-):
+) -> None:
     """
     Translate .asm code to object file
     """
@@ -55,11 +55,10 @@ def translate_cmd(
 def execute(
         obj_file_name: str,
         trace: Optional[bool] = False
-):
+) -> None:
     """
     Execute object file
     """
-    typer.echo(f'Executing {obj_file_name}...')
 
     program: Program = read_program_from_file(obj_file_name)
     executor: ProgramExecutor = ProgramExecutor(program)
@@ -72,6 +71,28 @@ def execute(
             print('ALU', ex.alu)
             print('Memory:', ex.m_controller)
             print('Clock:', ex.clock)
+    except PyAsmException as error:
+        print_exception(error)
+        exit(1)
+
+
+@app.command(name="run")
+def run(
+        asm_file_name: str,
+        object_file_name: Optional[str] = None,
+        verbose: Optional[bool] = False,
+        trace: Optional[bool] = False
+) -> None:
+    """
+    Translate and execute .pyasm file
+    """
+
+    if object_file_name is None:
+        object_file_name = f'{asm_file_name}.o'
+
+    try:
+        translate(asm_file_name, object_file_name, verbose)
+        execute(object_file_name, trace)
     except PyAsmException as error:
         print_exception(error)
         exit(1)
