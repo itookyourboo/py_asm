@@ -28,5 +28,6 @@ class IOController:
         print(number, end='')
 
     def getn(self) -> int:
-        result: int = int(''.join(map(chr, self._getc())).strip())
+        number: str = ''.join(map(chr, self._getc()))
+        result: int = int(number.strip('\n\x00'))
         return result
