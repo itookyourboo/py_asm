@@ -1,6 +1,8 @@
 """
 Custom exceptions
 """
+from types import TracebackType
+from typing import Type, Literal, Optional
 
 
 class PyAsmException(Exception):
@@ -117,3 +119,33 @@ class RegisterIsNotWritable(PyAsmException):
     """
     Raised when trying to write into not-writable register
     """
+
+
+class CatchPyAsmException:
+    """
+    Context manager that handles unexpected exceptions
+    """
+
+    def __init__(self):
+        self.exception: Optional[PyAsmException] = None
+
+    def __enter__(self) -> 'CatchPyAsmException':
+        return self
+
+    def __exit__(
+            self,
+            exc_type: Optional[Type[BaseException]],
+            exc_val: Optional[BaseException],
+            exc_tb: Optional[TracebackType]
+    ) -> Optional[Literal[True]]:
+        if exc_val and isinstance(exc_val, PyAsmException):
+            self.exception = exc_val
+        elif exc_val and exc_type:
+            tb_info: str = exc_tb and str(exc_tb.tb_frame) or "<None>"
+            self.exception = PyAsmException(
+                f'Unhandled exception.\n'
+                f'\t{exc_type.__name__}: {str(exc_val)}\n'
+                f'\tInformation: {tb_info}'
+            )
+
+        return True
