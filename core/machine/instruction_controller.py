@@ -2,6 +2,7 @@
 Instruction Executor Unit
 """
 import operator
+from types import UnionType
 from typing import Callable, Optional, Iterator, Iterable
 
 from core.machine.alu import ALU, Flag
@@ -454,3 +455,35 @@ class InstructionController:
             for key, func in cls.__dict__.items()
             if key.startswith('i_')
         }
+
+
+def generate_instruction_docs() -> None:
+    """
+    Generate documentation for pyasm instructions
+    """
+    doc_instructions: list[str] = [
+        '### Instructions\n'
+    ]
+    for name, function in InstructionController.get_all().items():
+        doc_instructions.append(f'#### {name}\n')
+        docstring = function.__doc__
+        if docstring:
+            docstring = docstring.strip()
+        doc_instructions.append(
+            '```\n'
+            f'{docstring}\n'
+            '```\n'
+        )
+        for key, value in function.__annotations__.items():
+            if isinstance(value, type):
+                value = value.__name__
+            elif isinstance(value, UnionType):
+                value = ' | '.join(x.__name__ for x in value.__args__)
+            doc_instructions.append(f'- **{key}**: `{value}`\n')
+
+    with open('../../docs/instructions.md', 'w', encoding='utf8') as file:
+        file.writelines(doc_instructions)
+
+
+if __name__ == '__main__':
+    generate_instruction_docs()
