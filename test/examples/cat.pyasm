@@ -1,0 +1,25 @@
+section .data
+    NULL_TERM: 0x00
+    STRING: buf 32
+
+section .text
+    .read_string:
+        XOR %rsi, %rsi
+        .read_char:
+            GETC %rsx
+            CMP %rsx, #NULL_TERM
+            JE .print_string
+            MOV #STRING[%rsi], %rsx
+            INC %rsi
+            JMP .read_char
+    .print_string:
+        XOR %rdi, %rdi
+        .print_char:
+            LD %rdx, #STRING[%rdi]
+            CMP %rdx, #NULL_TERM
+            JE .exit
+            PUTC %rdx
+            INC %rdi
+            JMP .print_char
+    .exit:
+        HLT

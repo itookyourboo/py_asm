@@ -12,8 +12,26 @@ typer = "^0.7.0"
 pylint = "^2.15.7"
 flake8 = "^6.0.0"
 mypy = "^0.991"
-
+pytest = "^7.2.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+ignore_missing_imports = "True"
+check_untyped_defs = "True"
+
+[tool.pylint.'[MESSAGES CONTROL]']
+# R0903: Too few public methods
+# R0904: Too many public methods
+# R0913: Too many arguments
+
+# R0924: Badly implemented Container -- this message is bs, the builtins don't follow it
+# E1101: Disabling this to make the injector happy
+# R0801: Similarity detection -- this is not correctly ignoring imports, etc.
+# R0201: Method could be a function -- but maybe it shouldn't?
+# C0103: "bad names" -- too many to be useful right now
+# W0102: dangerous default value -- this is usually safe, and we use it a lot..
+# W0613: unused argument
+disable = "R0903, R0904, R0913"
