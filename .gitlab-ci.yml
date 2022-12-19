@@ -32,7 +32,7 @@ mypy:
     - merge_requests
   allow_failure: true
   script:
-    - poetry run mypy . --check-untyped-defs
+    - poetry run mypy .
 
 
 pytest:

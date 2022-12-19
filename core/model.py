@@ -1,9 +1,20 @@
+"""
+Declaring base models for translating and processing
+"""
 from dataclasses import dataclass, field
 from typing import TypeAlias
 
 
 class Operand:
-    value: str | int
+    """
+    Operand base class. It can be:
+        - Address
+        - Constant
+        - Label
+        - IndirectAddress
+        - Register
+    """
+    value: int
 
     def __str__(self) -> str:
         return str(self.value)
@@ -11,65 +22,94 @@ class Operand:
 
 @dataclass
 class Constant(Operand):
-    value: str | int
-
-
-@dataclass
-class String(Constant):
-    value: str
-
-
-@dataclass
-class Number(Constant):
+    """
+    Read-only integer value
+    """
     value: int
 
 
 @dataclass
 class RegisterInfo:
+    """
+    Information about register
+        - can_read  -- register is readable
+        - can_write -- register is writable
+    """
     can_read: bool
     can_write: bool
-    size: int
 
 
 @dataclass
 class Register(Operand):
-    value: str
+    """
+    Register model for translator.
+        'RAX' -> Register('RAX')
+
+    Available registers declared in core.machine.registers
+    """
+    name: str
 
     def __str__(self) -> str:
-        return f'%{self.value}'
+        return f'%{self.name}'
 
 
 @dataclass
 class Address(Operand):
-    value: str = ''
-    index: int = -1
+    """
+    Direct address model
+        - value -- real address in data memory
+        - label -- link to data memory address
+    """
+    value: int = -1
+    label: str = ''
 
     def __str__(self) -> str:
-        return f'#{self.value}'
+        return f'#{self.label}'
 
 
 @dataclass
 class IndirectAddress(Operand):
+    """
+    Indirect address model
+        - label     -- link to base data memory address
+        - offset    -- offset operand that is being computed in runtime
+    """
     offset: Operand
-    value: str = ''
-    index: int = -1
+    label: str = ''
 
     def __str__(self) -> str:
-        return f'#{self.value}[{self.offset}]'
+        return f'#{self.label}[{self.offset}]'
 
 
 class LOC:
-    pass
+    """
+    Base model for .text section line. It can be:
+        - Label
+        - Instruction
+    """
 
 
 @dataclass
 class Label(LOC, Operand):
-    value: str
-    index: int = -1
+    """
+    Label model
+        - name  --  link name to code section
+        - value --  real address in code section
+    """
+    name: str
+    value: int = -1
+
+    def __str__(self) -> str:
+        return self.name
 
 
 @dataclass
 class Instruction(LOC):
+    """
+    Instruction model
+        - name      -- name of instruction
+        - operands  -- list of operands this instruction uses
+    """
     name: str
     operands: list[Operand] = field(default_factory=list)
 
@@ -80,18 +120,33 @@ class Instruction(LOC):
 
 @dataclass
 class DataSection:
+    """
+    section .data model (Data)
+        - var_to_addr   -- hash-table {label: real_data_address}
+        - memory        -- plain data memory of integer values
+    """
     var_to_addr: dict[str, int] = field(default_factory=dict)
     memory: list[int] = field(default_factory=list)
 
 
 @dataclass
 class TextSection:
+    """
+    section .text model (Code)
+        - labels    -- hash-table {label: real_code_address}
+        - lines     -- array of instructions to execute
+    """
     labels: dict[str, int] = field(default_factory=dict)
     lines: list[Instruction] = field(default_factory=list)
 
 
 @dataclass
 class Program:
+    """
+    Program model
+        - data  -- section .data (Data)
+        - text  -- section .text (Code)
+    """
     data: DataSection = field(default_factory=DataSection)
     text: TextSection = field(default_factory=TextSection)
 

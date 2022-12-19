@@ -7,18 +7,18 @@ section .text
         XOR %rsi, %rsi
         .read_char:
             GETC %rsx
-            MOV #STRING[%rsi], %rsx
             CMP %rsx, #NULL_TERM
             JE .print_string
+            MOV #STRING[%rsi], %rsx
             INC %rsi
             JMP .read_char
     .print_string:
         XOR %rdi, %rdi
         .print_char:
             LD %rdx, #STRING[%rdi]
-            PUTC %rdx
             CMP %rdx, #NULL_TERM
             JE .exit
+            PUTC %rdx
             INC %rdi
             JMP .print_char
     .exit:

@@ -1,6 +1,5 @@
 section .data
     MAX_DIVIDER: 20
-    NEW_LINE: '\n'
     STEP: 2
 
 section .text
@@ -40,5 +39,5 @@ section .text
             JMP .next_divider
     .exit:
         PUTN %rax
-        PUTC #NEW_LINE
+        PUTC '\n'
         HLT

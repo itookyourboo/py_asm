@@ -1,20 +1,39 @@
+"""
+Input-Output Unit
+"""
+
+import sys
 from typing import Iterator, Optional
 
-from core.config import NULL_TERM
+from core.machine.config import NULL_TERM
 
 
 class IOController:
-    def __init__(self):
+    """
+    Input-Output Controller class
+    """
+
+    def __init__(self) -> None:
         self.stdin: Optional[Iterator] = None
+        self.stdout: Optional[Iterator] = None
 
     def putc(self, char: int) -> None:
+        """
+        Puts symbol into stdout
+        """
         print(chr(char), end='')
 
     def _getc(self) -> Iterator[int]:
-        yield from map(ord, input() + '\n')
+        """
+        Generate symbol codes stream from input string
+        """
+        yield from map(ord, sys.stdin.read())
         yield NULL_TERM
 
     def getc(self) -> int:
+        """
+        Get symbol from stdout
+        """
         if self.stdin is None:
             self.stdin = iter(self._getc())
 
@@ -25,9 +44,15 @@ class IOController:
             return NULL_TERM
 
     def putn(self, number: int) -> None:
+        """
+        Put number into stdout
+        """
         print(number, end='')
 
     def getn(self) -> int:
+        """
+        Get number from stdout
+        """
         number: str = ''.join(map(chr, self._getc()))
-        result: int = int(number.strip('\n\x00'))
+        result: int = int(number.strip('\x00'))
         return result
