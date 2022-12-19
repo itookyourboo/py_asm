@@ -10,7 +10,7 @@ Computer system containing:
 from typing import Iterator
 
 from core.machine.alu import ALU
-from core.machine.clock import ClockGenerator
+from core.machine.clock import ClockGenerator, Trace
 from core.exceptions import ProgramExit
 from core.machine.instruction_controller import InstructionController
 from core.machine.io_controller import IOController
@@ -23,6 +23,7 @@ class Computer:
     """
     Computer class
     """
+
     def __init__(self) -> None:
         self.clock = ClockGenerator()
         self.alu = ALU()
@@ -37,11 +38,15 @@ class Computer:
             self.r_controller
         )
 
-    def execute_program(self, program: Program) -> Iterator['Computer']:
+    def execute_program(
+            self,
+            program: Program,
+            trace: Trace
+    ) -> Iterator['Computer']:
         """
         Execute given program
 
-        Generates the computer state after every instruction
+        Generates the computer state after every tick
         """
         self.m_controller.load_data(program.data.memory)
         code: TextSection = program.text
@@ -52,8 +57,13 @@ class Computer:
         ):
             try:
                 current_instruction = code.lines[pointer]
-                self.instruction_executor.execute(current_instruction)
-                yield self
+                [*ticks] = (
+                    self.instruction_executor.execute(current_instruction)
+                )
+                if trace == Trace.INST:
+                    yield self
+                elif trace == Trace.TICK:
+                    for _ in ticks:
+                        yield self
             except ProgramExit:
-                yield self
                 return

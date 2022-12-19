@@ -2,7 +2,7 @@
 Instruction Executor Unit
 """
 import operator
-from typing import Callable, Optional
+from typing import Callable, Optional, Iterator, Iterable
 
 from core.machine.alu import ALU, Flag
 from core.machine.clock import ClockGenerator
@@ -89,7 +89,7 @@ class InstructionController:
         else:
             raise OperandIsNotWriteable(operand.value)
 
-    def jump_to(self, label: Label) -> None:
+    def _jump_to(self, label: Label) -> None:
         """
         Set instruction pointer to label value
         """
@@ -100,7 +100,7 @@ class InstructionController:
             reducer: Callable,
             dest: Destination,
             *operands: Source
-    ) -> None:
+    ) -> Iterator:
         """
         Defines operation behavior applying reducer function to operands
             - Two operands.
@@ -127,6 +127,7 @@ class InstructionController:
 
         # get_operand_value -> tick
         self.clock.tick()
+        yield
 
         for operand in operands:
             operand_value: int = self.get_operand_value(operand)
@@ -134,6 +135,7 @@ class InstructionController:
             result = self.alu.operation(reducer, result, operand_value)
             # apply operation -> tick
             self.clock.tick()
+            yield
 
         self.set_operand_value(dest, result)
 
@@ -141,11 +143,10 @@ class InstructionController:
         """
         Jump to label if condition is True
         """
-        self.clock.tick()
         if condition:
-            self.jump_to(label)
+            self._jump_to(label)
 
-    def i_add(self, dest: Destination, *ops: Source) -> None:
+    def i_add(self, dest: Destination, *ops: Source) -> Iterator:
         """
         ADD dest, *ops
 
@@ -155,9 +156,9 @@ class InstructionController:
             - ADD A, B, C, D
                 A = ((B + C) + D)
         """
-        self._reduce_op(operator.add, dest, *ops)
+        yield from self._reduce_op(operator.add, dest, *ops)
 
-    def i_sub(self, dest: Destination, *ops: Source) -> None:
+    def i_sub(self, dest: Destination, *ops: Source) -> Iterator:
         """
         SUB dest, *ops
 
@@ -167,9 +168,9 @@ class InstructionController:
             - SUB A, B, C, D
                 A = ((B - C) - D)
         """
-        self._reduce_op(operator.sub, dest, *ops)
+        yield from self._reduce_op(operator.sub, dest, *ops)
 
-    def i_mul(self, dest: Destination, *ops: Source) -> None:
+    def i_mul(self, dest: Destination, *ops: Source) -> Iterator:
         """
         MUL dest, *ops
 
@@ -179,9 +180,9 @@ class InstructionController:
             - MUL A, B, C, D
                 A = ((B * C) * D)
         """
-        self._reduce_op(operator.mul, dest, *ops)
+        yield from self._reduce_op(operator.mul, dest, *ops)
 
-    def i_div(self, dest: Destination, *ops: Source) -> None:
+    def i_div(self, dest: Destination, *ops: Source) -> Iterator:
         """
         DIV dest, *ops
 
@@ -193,9 +194,9 @@ class InstructionController:
 
         Can raise ALUDZeroDivisionError
         """
-        self._reduce_op(operator.floordiv, dest, *ops)
+        yield from self._reduce_op(operator.floordiv, dest, *ops)
 
-    def i_mod(self, dest: Destination, *ops: Source) -> None:
+    def i_mod(self, dest: Destination, *ops: Source) -> Iterator:
         """
         MOD dest, *ops
 
@@ -207,9 +208,9 @@ class InstructionController:
 
         Can raise ALUDZeroDivisionError
         """
-        self._reduce_op(operator.mod, dest, *ops)
+        yield from self._reduce_op(operator.mod, dest, *ops)
 
-    def i_xor(self, dest: Destination, *ops: Source) -> None:
+    def i_xor(self, dest: Destination, *ops: Source) -> Iterator:
         """
         XOR dest, *ops
 
@@ -219,9 +220,9 @@ class InstructionController:
             - XOR A, B, C, D
                 A = ((B ^ C) ^ D)
         """
-        self._reduce_op(operator.xor, dest, *ops)
+        yield from self._reduce_op(operator.xor, dest, *ops)
 
-    def i_and(self, dest: Destination, *ops: Source) -> None:
+    def i_and(self, dest: Destination, *ops: Source) -> Iterator:
         """
         AND dest, *ops
 
@@ -231,9 +232,9 @@ class InstructionController:
             - AND A, B, C, D
                 A = ((B & C) & D)
         """
-        self._reduce_op(operator.and_, dest, *ops)
+        yield from self._reduce_op(operator.and_, dest, *ops)
 
-    def i_or(self, dest: Destination, *ops: Source) -> None:
+    def i_or(self, dest: Destination, *ops: Source) -> Iterator:
         """
         OR dest, *ops
 
@@ -243,23 +244,29 @@ class InstructionController:
             - OR A, B, C, D
                 A = ((B | C) | D)
         """
-        self._reduce_op(operator.or_, dest, *ops)
+        yield from self._reduce_op(operator.or_, dest, *ops)
 
-    def i_dec(self, dest: Destination) -> None:
+    def i_dec(self, dest: Destination) -> Iterator:
         """
         DEC dest
 
         Decrement (-1) operand
         """
-        self.set_operand_value(dest, self.get_operand_value(dest) - 1)
+        value: int = self.get_operand_value(dest)
+        self.clock.tick()
+        yield
+        self.set_operand_value(dest, value - 1)
 
-    def i_inc(self, dest: Destination) -> None:
+    def i_inc(self, dest: Destination) -> Iterator:
         """
         INC dest
 
         Increment (+1) operand
         """
-        self.set_operand_value(dest, self.get_operand_value(dest) + 1)
+        value: int = self.get_operand_value(dest)
+        self.clock.tick()
+        yield
+        self.set_operand_value(dest, value + 1)
 
     def i_jmp(self, label: Label) -> None:
         """
@@ -267,7 +274,7 @@ class InstructionController:
 
         Jump to label without condition
         """
-        self.jump_to(label)
+        self._jump_to(label)
 
     def i_je(self, label: Label) -> None:
         """
@@ -407,22 +414,26 @@ class InstructionController:
         """
         self.set_operand_value(dest, self.io_controller.getn())
 
-    def i_hlt(self) -> None:
+    def i_hlt(self) -> Iterator:
         """
         HLT
 
         Stop execution
         """
+        self.clock.tick()
+        yield
         raise ProgramExit
 
-    def execute(self, instruction: Instruction) -> None:
+    def execute(self, instruction: Instruction) -> Iterator:
         """
         Execute instruction by its name
         """
         self.current = instruction
         name: str = self.current.name
         # map needed function by name and call it
-        self.get_all()[name](self, *instruction.operands)
+        result = self.get_all()[name](self, *instruction.operands)
+        if isinstance(result, Iterable):
+            yield from result
         # increment instruction pointer (next instruction)
         self.registers.set_instruction_pointer(
             self.registers.get_instruction_pointer() + 1
@@ -430,6 +441,7 @@ class InstructionController:
         # increment ticks and instructions after execution
         self.clock.tick()
         self.clock.inst()
+        yield
 
     @classmethod
     def get_all(cls) -> dict[str, Callable]:

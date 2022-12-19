@@ -1,6 +1,19 @@
 """
 Clock Generator Unit
 """
+from enum import Enum
+
+
+class Trace(str, Enum):
+    """
+    Trace type:
+        - no    -- no trace
+        - tick  -- trace every tick
+        - inst  -- trace every instruction
+    """
+    NO = 'no'
+    TICK = 'tick'
+    INST = 'inst'
 
 
 class ClockGenerator:
@@ -9,6 +22,7 @@ class ClockGenerator:
         - _tick  -- number of ticks
         - _inst  -- number of instructions
     """
+
     def __init__(self) -> None:
         self._tick = 0
         self._inst = 0
