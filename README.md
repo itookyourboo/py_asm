@@ -39,6 +39,92 @@
   - Результат должен быть подан на вывод
   - Формат ввода/вывода данных - на ваше усмотрение
 
+## Установка и запуск
+
+```shell
+$ git clone https://gitlab.se.ifmo.ru/wignorbo/py_asm.git
+$ cd py_asm
+$ pip install poetry
+$ poetry install --no-root
+```
+
+```shell
+$ python main.py --help
+
+ Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+ PyAsm Runner
+
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                                      │
+│ --show-completion             Show completion for the current shell, to copy it or customize the             │
+│                               installation.                                                                  │
+│ --help                        Show this message and exit.                                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ exec                     Execute object file                                                                 │
+│ run                      Translate and execute .pyasm file                                                   │
+│ translate                Translate .asm code to object file                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### Трансляция
+
+```
+$ python .\main.py translate --help
+
+ Usage: main.py translate [OPTIONS] ASM_FILE_NAME
+
+ Translate .asm code to object file
+
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    asm_file_name      TEXT  [default: None] [required]                                                     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --output   -o      TEXT  [default: None]                                                                     │
+│ --verbose  -v                                                                                                │
+│ --help                   Show this message and exit.                                                         │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### Исполнение
+
+```shell
+$ python .\main.py exec --help     
+
+ Usage: main.py exec [OPTIONS] OBJ_FILE_NAME
+
+ Execute object file
+
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    obj_file_name      TEXT  [default: None] [required]                                                     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --trace  -t      [no|tick|inst]  [default: Trace.NO]                                                         │
+│ --help                           Show this message and exit.                                                 │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### Трансляция + Исполнение
+
+```shell
+$ python .\main.py run --help 
+
+ Usage: main.py run [OPTIONS] ASM_FILE_NAME
+
+ Translate and execute .pyasm file
+
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    asm_file_name      TEXT  [default: None] [required]                                                     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --output   -o      TEXT            [default: None]                                                           │
+│ --verbose  -v                                                                                                │
+│ --trace    -t      [no|tick|inst]  [default: Trace.NO]                                                       │
+│ --help                             Show this message and exit.                                               │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
 ## Язык программирования
 
 ### Структура программы
@@ -218,16 +304,6 @@ ADD %RAX, #VAR, 0xf1, %RDX  ; #VAR + 0xf1 + %RDX -> %RAX
 
 Внутренние ошибки обрабатываются контекстным менеджером, который отлавливает их и преобразовывает в PyAsmException, поэтому пользователь лишнего не узнает.
 
-### Описание процессора
-#### Типы данных и машинного слова
-#### Устройство памяти и регистров, адресации
-#### Устройство ввода-вывода
-#### Возможности управления и системы прерываний
-
-### Набор инструкций
-
-### Способ кодирования инструкций
-
 ## Транслятор
 
 Имеет две стадии:
@@ -253,25 +329,6 @@ Program:
 ```
 
 Сам парсинг и валидация происходят с помощью регулярных выражений и обычных преобразований со строками.
-
-```shell
-$ python3 main.py translate --help
-Usage: main.py translate [OPTIONS] ASM_FILE_NAME
-
-  Translate .asm code to object file
-
-Arguments:
-  ASM_FILE_NAME  [required]
-
-Options:
-  --object-file-name TEXT
-  -v, --verbose
-  --help                   Show this message and exit.
-```
-
-```shell
-$ python3 main.py translate prob5.pyasm
-```
 
 Если явно не указать имя объектного файла, то появится файл prob5.pyasm.o, который содержит сериализованное с помощью модуля `pickle` дерево. Весит намного меньше обычного JSON.
 
@@ -374,7 +431,7 @@ ADD x1, x2, x3, x4, x5  ; (((x2 + x3) + x4) + x5) -> x1
 Тестирование алгоритмов приведено в файле [test/test_pyasm.py](test/test_pyasm.py)
 
 ```shell
-$  python3 main.py run test/examples/prob5.pyasm --trace tick > analyze.txt 
+$ python3 main.py run test/examples/prob5.pyasm --trace tick > analyze.txt 
 20
 $ python3 main.py run test/examples/cat.pyasm --trace tick > test/examples/cat.pyasm.log
 foo

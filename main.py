@@ -12,7 +12,17 @@ from core.file_helper import translate_asm_file, read_program_from_file
 from core.model import Program
 from core.machine import Computer, Trace
 
-app = typer.Typer(help='Assembler translator')
+app = typer.Typer(help='PyAsm Runner')
+
+OPTION_OUTPUT = lambda: typer.Option(
+    None, '--output', '-o'
+)
+OPTION_VERBOSE = lambda: typer.Option(
+    False, '--verbose', '-v'
+)
+OPTION_TRACE = lambda: typer.Option(
+    Trace.NO, '--trace', '-t', case_sensitive=False
+)
 
 
 def print_exception(error: PyAsmException) -> None:
@@ -31,7 +41,9 @@ def print_exception(error: PyAsmException) -> None:
 @app.command(name="translate")
 def translate(
         asm_file_name: str,
-        object_file_name: Optional[str] = None,
+        object_file_name: Optional[str] = typer.Option(
+            None, '--output', '-o'
+        ),
         verbose: Optional[bool] = typer.Option(
             False, '--verbose', '-v'
         )
@@ -83,8 +95,12 @@ def execute(
 @app.command(name="run")
 def run(
         asm_file_name: str,
-        object_file_name: Optional[str] = None,
-        verbose: Optional[bool] = False,
+        object_file_name: Optional[str] = typer.Option(
+            None, '--output', '-o'
+        ),
+        verbose: Optional[bool] = typer.Option(
+            False, '--verbose', '-v'
+        ),
         trace: Trace = typer.Option(
             Trace.NO, '--trace', '-t', case_sensitive=False
         )
