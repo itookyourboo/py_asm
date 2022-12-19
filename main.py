@@ -2,6 +2,7 @@
 CLI interface to translate and execute assembler
 """
 import warnings
+import sys
 from typing import Optional, Type
 
 import typer
@@ -9,12 +10,15 @@ import typer
 from core.exceptions import PyAsmException
 from core.file_helper import translate_asm_file, read_program_from_file
 from core.model import Program
-from core.machine import ProgramExecutor
+from core.machine import Computer
 
 app = typer.Typer(help='Assembler translator')
 
 
 def print_exception(error: PyAsmException) -> None:
+    """
+    Print PyAsmException message in stderr
+    """
     exc_type: Type[PyAsmException] = type(error)
     typer.echo(
         typer.style(
@@ -24,7 +28,7 @@ def print_exception(error: PyAsmException) -> None:
         typer.style(
             f'{exc_type.__doc__}',
             fg=typer.colors.BRIGHT_RED
-        )
+        ), err=True
     )
 
 
@@ -48,7 +52,7 @@ def translate(
         translate_asm_file(asm_file_name, object_file_name)
     except PyAsmException as error:
         print_exception(error)
-        exit(1)
+        sys.exit(1)
 
 
 @app.command(name="exec")
@@ -61,19 +65,19 @@ def execute(
     """
 
     program: Program = read_program_from_file(obj_file_name)
-    executor: ProgramExecutor = ProgramExecutor(program)
+    computer: Computer = Computer()
     try:
-        for ex in executor.execute():
+        for ex in computer.execute_program(program):
             if not trace:
                 continue
-            print(str(ex.current_instruction))
+            print(str(ex.instruction_executor.current))
             print('Registers:', ex.r_controller)
             print('ALU', ex.alu)
             print('Memory:', ex.m_controller)
             print('Clock:', ex.clock)
     except PyAsmException as error:
         print_exception(error)
-        exit(1)
+        sys.exit(1)
 
 
 @app.command(name="run")
@@ -95,7 +99,7 @@ def run(
         execute(object_file_name, trace)
     except PyAsmException as error:
         print_exception(error)
-        exit(1)
+        sys.exit(1)
 
 
 if __name__ == '__main__':

@@ -1,3 +1,7 @@
-from .processor import ProgramExecutor
+"""
+Machine module
+"""
 
-__all__ = ('ProgramExecutor',)
+from .computer import Computer
+
+__all__ = ('Computer',)

@@ -4,7 +4,8 @@ Util-functions for working with data
 
 import re
 
-from core.machine.registers import RegisterController
+from core.machine.instruction_controller import InstructionController
+from core.machine.register_controller import RegisterController
 
 RE_NEG = r'-?'
 RE_HEX = r'0[xX][0-9a-fA-F]+'
@@ -20,7 +21,7 @@ RE_OPR = rf'({RE_NUM})|({RE_REG})'
 
 RE_LBL = r'\.?[a-zA-Z_]+'
 
-RE_STR = r'^[\'\"].*[\'\"]$'
+RE_STR = r'^(\'.*\')|(\".*\")$'
 
 RE_VAR = r'[a-zA-Z_][0-9a-zA-Z_]*'
 
@@ -33,6 +34,9 @@ RE_ADR = rf'({RE_DAD})|({RE_ILR})|({RE_IRG})'
 
 
 def is_number(string: str) -> bool:
+    """
+    Check if string is hex, oct, bin or dec number
+    """
     return bool(
         re.fullmatch(
             RE_NUM,
@@ -42,6 +46,9 @@ def is_number(string: str) -> bool:
 
 
 def convert_to_number(string: str) -> int:
+    """
+    Convert hex, oct, bin or dec number into simple integer
+    """
     string = string.upper()
 
     if re.match(rf'{RE_NEG}{RE_HEX}', string):
@@ -57,6 +64,9 @@ def convert_to_number(string: str) -> int:
 
 
 def is_string(string: str) -> bool:
+    """
+    Check if string is symbols surrounded by quotes
+    """
     return bool(
         re.fullmatch(
             RE_STR,
@@ -66,6 +76,9 @@ def is_string(string: str) -> bool:
 
 
 def is_register(string: str) -> bool:
+    """
+    Check if there is register with such name
+    """
     return bool(
         re.fullmatch(
             RE_REG,
@@ -74,7 +87,17 @@ def is_register(string: str) -> bool:
     )
 
 
+def is_instruction(string: str) -> bool:
+    """
+    Check if there is instruction with such name
+    """
+    return string.lower() in InstructionController.get_all()
+
+
 def is_direct_address(string: str) -> bool:
+    """
+    Check if string is direct address
+    """
     return bool(
         re.fullmatch(
             RE_DAD,
@@ -84,6 +107,9 @@ def is_direct_address(string: str) -> bool:
 
 
 def is_indirect_address(string: str) -> bool:
+    """
+    Check if string is indirect address
+    """
     return bool(
         re.fullmatch(
             RE_IAD,
@@ -92,19 +118,25 @@ def is_indirect_address(string: str) -> bool:
     )
 
 
-def is_address(string: str) -> bool:
-    return bool(
-        re.fullmatch(
-            RE_ADR,
-            string.upper()
-        )
-    )
-
-
 def is_label(string: str) -> bool:
+    """
+    Check if string is label
+    """
     return bool(
         re.fullmatch(
             RE_LBL,
             string.upper()
         )
+    )
+
+
+def regularize_string(string: str) -> str:
+    """
+    Replace escape characters
+    """
+    return (
+        string
+        .replace('\\n', '\n')
+        .replace('\\t', '\t')
+        .replace('\\r', '\r')
     )

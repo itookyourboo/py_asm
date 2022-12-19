@@ -6,7 +6,7 @@ flake8 .
 echo '=====PYLINT====='
 pylint ./main.py ./core/ ./test/
 echo '======MYPY======'
-mypy . --check-untyped-defs
+mypy .
 
 echo '==[TESTING]=='
 echo '====UNIT-TESTS===='
