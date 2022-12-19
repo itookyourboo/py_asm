@@ -10,7 +10,7 @@ from core.machine.clock import ClockGenerator
 from core.exceptions import (
     OperandIsNotWriteable, ProgramExit, NotEnoughOperands
 )
-from core.machine.io_controller import IOController
+from core.machine.config import NULL_TERM
 from core.machine.memory_controller import MemoryController
 from core.model import (
     Address, Register, Label, Operand, Instruction,
@@ -29,14 +29,12 @@ class InstructionController:
             self,
             clock: ClockGenerator,
             alu: ALU,
-            io_controller: IOController,
             memory: MemoryController,
             registers: RegisterController
     ) -> None:
         self.current: Optional[Instruction] = None
         self.clock = clock
         self.alu = alu
-        self.io_controller = io_controller
         self.memory = memory
         self.registers = registers
 
@@ -351,25 +349,46 @@ class InstructionController:
             )
         )
 
-    def i_mov(self, dest: Destination, src: Source) -> None:
+    def i_mov(self, dest: Destination, src: Source) -> Iterator:
         """
         MOV dest, src
 
         Move value from src to dest
-        """
-        self.set_operand_value(dest, self.get_operand_value(src))
 
-    def i_ld(
-            self,
-            register: Register,
-            address: Address | IndirectAddress
-    ) -> None:
+        If dest is #STDOUT or #STDERR then src value
+        will be written in stdout or stderr respectively
         """
-        LD register, address
+        value: int = self.get_operand_value(src)
+        self.clock.tick()
+        yield
+        self.set_operand_value(dest, value)
 
-        Load data by address to register
+    def i_movn(self, dest: Address, src: Source) -> Iterator:
         """
-        self.set_operand_value(register, self.get_operand_value(address))
+        MOVN dest, src
+
+        Move number value from src to #STDOUT or #STDERR
+        """
+        value: int = self.get_operand_value(src)
+        self.clock.tick()
+        yield
+        for digit in str(value):
+            self.set_operand_value(dest, ord(digit))
+            self.clock.tick()
+            yield
+
+    def i_ldn(self, dest: Address, src: Source) -> Iterator:
+        """
+        LDN dest, src
+
+        Get number value from #STDIN and write into dest
+        """
+        result: str = ''
+        while (digit := self.get_operand_value(src)) != NULL_TERM:
+            result += chr(digit)
+            self.clock.tick()
+            yield
+        self.set_operand_value(dest, int(result))
 
     def i_cmp(self, var: Source, src: Source) -> None:
         """
@@ -382,38 +401,6 @@ class InstructionController:
             self.get_operand_value(var),
             self.get_operand_value(src)
         )
-
-    def i_putc(self, src: Source) -> None:
-        """
-        PUTC src
-
-        Write single into stdout
-        """
-        self.io_controller.putc(self.get_operand_value(src))
-
-    def i_getc(self, dest: Destination) -> None:
-        """
-        GETC dest
-
-        Read single char from stdout
-        """
-        self.set_operand_value(dest, self.io_controller.getc())
-
-    def i_putn(self, src: Source) -> None:
-        """
-        PUTN src
-
-        Write number into stdout
-        """
-        self.io_controller.putn(self.get_operand_value(src))
-
-    def i_getn(self, dest: Destination) -> None:
-        """
-        GETN dest
-
-        Read number from stdout
-        """
-        self.set_operand_value(dest, self.io_controller.getn())
 
     def i_hlt(self) -> Iterator:
         """

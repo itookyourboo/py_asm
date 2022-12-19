@@ -4,10 +4,10 @@ section .data
 
 section .text
     .print_char:
-        LD %rdx, #HELLO[%rdi]
+        MOV %rdx, #HELLO[%rdi]
         CMP %rdx, #NULL_TERM
         JE .exit
-        PUTC %rdx
+        MOV #STDOUT, %rdx
         INC %rdi
         JMP .print_char
     .exit:

@@ -1,320 +1,412 @@
-LD %RDX, #HELLO[%RDI]
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 0}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 1, inst: 1
+Clock: tick: 2, inst: 1
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 0}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 2, inst: 1
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 0}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 2, inst: 2
+Clock: tick: 3, inst: 2
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 3, inst: 3
-hPUTC %RDX
+Clock: tick: 4, inst: 3
+hMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 0}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 4, inst: 4
+Clock: tick: 6, inst: 4
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 0}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 6, inst: 4
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 1}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 6, inst: 5
+Clock: tick: 8, inst: 5
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 1}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 6, inst: 5
+Clock: tick: 8, inst: 5
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 104, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 1}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 7, inst: 6
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 9, inst: 6
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 1}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 8, inst: 7
+Clock: tick: 11, inst: 7
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 1}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 11, inst: 7
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 1}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 9, inst: 8
+Clock: tick: 12, inst: 8
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 1}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 10, inst: 9
-ePUTC %RDX
+Clock: tick: 13, inst: 9
+eMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 1}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 11, inst: 10
+Clock: tick: 15, inst: 10
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 1}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 15, inst: 10
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 2}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 13, inst: 11
+Clock: tick: 17, inst: 11
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 2}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 13, inst: 11
+Clock: tick: 17, inst: 11
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 101, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 2}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 14, inst: 12
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 18, inst: 12
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 2}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 15, inst: 13
+Clock: tick: 20, inst: 13
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 2}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 20, inst: 13
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 2}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 16, inst: 14
+Clock: tick: 21, inst: 14
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 2}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 17, inst: 15
-lPUTC %RDX
+Clock: tick: 22, inst: 15
+lMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 2}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 18, inst: 16
+Clock: tick: 24, inst: 16
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 2}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 24, inst: 16
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 3}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 20, inst: 17
+Clock: tick: 26, inst: 17
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 3}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 20, inst: 17
+Clock: tick: 26, inst: 17
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 3}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 21, inst: 18
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 27, inst: 18
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 3}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 22, inst: 19
+Clock: tick: 29, inst: 19
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 3}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 29, inst: 19
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 3}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 23, inst: 20
+Clock: tick: 30, inst: 20
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 3}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 24, inst: 21
-lPUTC %RDX
+Clock: tick: 31, inst: 21
+lMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 3}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 25, inst: 22
+Clock: tick: 33, inst: 22
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 3}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 33, inst: 22
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 4}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 27, inst: 23
+Clock: tick: 35, inst: 23
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 4}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 27, inst: 23
+Clock: tick: 35, inst: 23
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 4}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 28, inst: 24
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 36, inst: 24
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 4}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 29, inst: 25
+Clock: tick: 38, inst: 25
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 4}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 38, inst: 25
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 4}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 30, inst: 26
+Clock: tick: 39, inst: 26
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 4}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 31, inst: 27
-oPUTC %RDX
+Clock: tick: 40, inst: 27
+oMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 4}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 32, inst: 28
+Clock: tick: 42, inst: 28
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 4}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 42, inst: 28
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 5}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 34, inst: 29
+Clock: tick: 44, inst: 29
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 5}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 34, inst: 29
+Clock: tick: 44, inst: 29
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 5}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 35, inst: 30
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 45, inst: 30
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 5}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 36, inst: 31
+Clock: tick: 47, inst: 31
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 5}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 47, inst: 31
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 5}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 37, inst: 32
+Clock: tick: 48, inst: 32
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 5}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 38, inst: 33
- PUTC %RDX
+Clock: tick: 49, inst: 33
+ MOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 5}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 39, inst: 34
+Clock: tick: 51, inst: 34
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 5}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 51, inst: 34
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 6}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 41, inst: 35
+Clock: tick: 53, inst: 35
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 6}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 41, inst: 35
+Clock: tick: 53, inst: 35
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 32, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 6}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 42, inst: 36
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 54, inst: 36
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 6}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 43, inst: 37
+Clock: tick: 56, inst: 37
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 6}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 56, inst: 37
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 6}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 44, inst: 38
+Clock: tick: 57, inst: 38
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 6}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 45, inst: 39
-wPUTC %RDX
+Clock: tick: 58, inst: 39
+wMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 6}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 46, inst: 40
+Clock: tick: 60, inst: 40
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 6}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 60, inst: 40
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 7}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 48, inst: 41
+Clock: tick: 62, inst: 41
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 7}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 48, inst: 41
+Clock: tick: 62, inst: 41
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 119, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 7}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 49, inst: 42
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 63, inst: 42
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 7}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 50, inst: 43
+Clock: tick: 65, inst: 43
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 7}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 65, inst: 43
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 7}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 51, inst: 44
+Clock: tick: 66, inst: 44
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 7}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 52, inst: 45
-oPUTC %RDX
+Clock: tick: 67, inst: 45
+oMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 7}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 53, inst: 46
+Clock: tick: 69, inst: 46
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 7}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 69, inst: 46
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 8}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 55, inst: 47
+Clock: tick: 71, inst: 47
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 8}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 55, inst: 47
+Clock: tick: 71, inst: 47
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 111, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 8}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 56, inst: 48
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 72, inst: 48
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 8}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 57, inst: 49
+Clock: tick: 74, inst: 49
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 8}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 74, inst: 49
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 8}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 58, inst: 50
+Clock: tick: 75, inst: 50
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 8}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 59, inst: 51
-rPUTC %RDX
+Clock: tick: 76, inst: 51
+rMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 8}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 60, inst: 52
+Clock: tick: 78, inst: 52
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 8}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 78, inst: 52
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 9}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 62, inst: 53
+Clock: tick: 80, inst: 53
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 9}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 62, inst: 53
+Clock: tick: 80, inst: 53
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 114, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 9}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 63, inst: 54
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 81, inst: 54
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 9}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 64, inst: 55
+Clock: tick: 83, inst: 55
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 9}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 83, inst: 55
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 9}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 65, inst: 56
+Clock: tick: 84, inst: 56
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 9}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 66, inst: 57
-lPUTC %RDX
+Clock: tick: 85, inst: 57
+lMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 9}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 67, inst: 58
+Clock: tick: 87, inst: 58
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 9}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 87, inst: 58
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 10}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 69, inst: 59
+Clock: tick: 89, inst: 59
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 10}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 69, inst: 59
+Clock: tick: 89, inst: 59
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 108, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 10}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 70, inst: 60
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 90, inst: 60
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 10}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 71, inst: 61
+Clock: tick: 92, inst: 61
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 10}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 92, inst: 61
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 10}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 72, inst: 62
+Clock: tick: 93, inst: 62
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 10}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 73, inst: 63
-dPUTC %RDX
+Clock: tick: 94, inst: 63
+dMOV #STDOUT, %RDX
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 10}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 74, inst: 64
+Clock: tick: 96, inst: 64
+MOV #STDOUT, %RDX
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 10}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 96, inst: 64
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 11}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 76, inst: 65
+Clock: tick: 98, inst: 65
 INC %RDI
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 11}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 76, inst: 65
+Clock: tick: 98, inst: 65
 JMP .print_char
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 100, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 11}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 77, inst: 66
-LD %RDX, #HELLO[%RDI]
+Clock: tick: 99, inst: 66
+MOV %RDX, #HELLO[%RDI]
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 0, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 11}
 ALU {'N': False, 'Z': False, 'V': False, 'C': False}
-Clock: tick: 78, inst: 67
+Clock: tick: 101, inst: 67
+MOV %RDX, #HELLO[%RDI]
+Registers: {'RAX': 0, 'RBX': 0, 'RDX': 0, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 11}
+ALU {'N': False, 'Z': False, 'V': False, 'C': False}
+Clock: tick: 101, inst: 67
 CMP %RDX, #NULL_TERM
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 0, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 11}
 ALU {'N': False, 'Z': True, 'V': False, 'C': False}
-Clock: tick: 79, inst: 68
+Clock: tick: 102, inst: 68
 JE .exit
 Registers: {'RAX': 0, 'RBX': 0, 'RDX': 0, 'RSX': 0, 'RIP': 6, 'RSI': 0, 'RDI': 11}
 ALU {'N': False, 'Z': True, 'V': False, 'C': False}
-Clock: tick: 80, inst: 69
+Clock: tick: 103, inst: 69

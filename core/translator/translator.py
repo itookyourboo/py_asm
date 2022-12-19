@@ -4,7 +4,7 @@ Translating .pyasm code into object file
 import warnings
 from typing import Iterator
 
-from core.machine.config import NULL_TERM
+from core.machine.config import NULL_TERM, STDIN, STDOUT, STDERR
 from core.exceptions import (
     UndefinedInstruction, UndefinedLOC, UnexpectedOperand,
     UnexpectedDataValue, TextSectionNotFound, NoSuchLabel,
@@ -144,8 +144,16 @@ def parse_data_section(code: str) -> DataSection:
     """
     Get data section from string
     """
-    data: dict[str, int] = {}
-    memory: list[int] = []
+    data: dict[str, int] = {
+        'STDIN': STDIN,
+        'STDOUT': STDOUT,
+        'STDERR': STDERR
+    }
+    memory: list[int] = [
+        0,
+        0,
+        0
+    ]
 
     for line in code.splitlines():
         key, constant_mem = parse_data_line(line)

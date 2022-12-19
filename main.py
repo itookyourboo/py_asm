@@ -14,16 +14,6 @@ from core.machine import Computer, Trace
 
 app = typer.Typer(help='PyAsm Runner')
 
-OPTION_OUTPUT = lambda: typer.Option(
-    None, '--output', '-o'
-)
-OPTION_VERBOSE = lambda: typer.Option(
-    False, '--verbose', '-v'
-)
-OPTION_TRACE = lambda: typer.Option(
-    Trace.NO, '--trace', '-t', case_sensitive=False
-)
-
 
 def print_exception(error: PyAsmException) -> None:
     """

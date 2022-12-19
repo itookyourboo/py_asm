@@ -187,16 +187,25 @@ MOV dest, src
 ```
 - **dest**: `Address | IndirectAddress | Register`
 - **src**: `Address | IndirectAddress | Register | Constant`
-- **return**: `None`
-#### ld
+- **return**: `typing.Iterator`
+#### movn
 ```
-LD register, address
+MOVN dest, src
 
-        Load data by address to register
+        Move number value from src to #STDOUT or #STDERR
 ```
-- **register**: `Register`
-- **address**: `Address | IndirectAddress`
-- **return**: `None`
+- **dest**: `Address`
+- **src**: `Address | IndirectAddress | Register | Constant`
+- **return**: `typing.Iterator`
+#### ldn
+```
+LDN dest, src
+
+        Get number value from #STDIN and write into dest
+```
+- **dest**: `Address`
+- **src**: `Address | IndirectAddress | Register | Constant`
+- **return**: `typing.Iterator`
 #### cmp
 ```
 CMP op1, op2
@@ -205,38 +214,6 @@ CMP op1, op2
 ```
 - **var**: `Address | IndirectAddress | Register | Constant`
 - **src**: `Address | IndirectAddress | Register | Constant`
-- **return**: `None`
-#### putc
-```
-PUTC src
-
-        Write single into stdout
-```
-- **src**: `Address | IndirectAddress | Register | Constant`
-- **return**: `None`
-#### getc
-```
-GETC dest
-
-        Read single char from stdout
-```
-- **dest**: `Address | IndirectAddress | Register`
-- **return**: `None`
-#### putn
-```
-PUTN src
-
-        Write number into stdout
-```
-- **src**: `Address | IndirectAddress | Register | Constant`
-- **return**: `None`
-#### getn
-```
-GETN dest
-
-        Read number from stdout
-```
-- **dest**: `Address | IndirectAddress | Register`
 - **return**: `None`
 #### hlt
 ```

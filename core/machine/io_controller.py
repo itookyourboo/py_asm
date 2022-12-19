@@ -3,7 +3,6 @@ Input-Output Unit
 """
 
 import sys
-from typing import Iterator, Optional
 
 from core.machine.config import NULL_TERM
 
@@ -13,45 +12,23 @@ class IOController:
     Input-Output Controller class
     """
 
-    def __init__(self) -> None:
-        self.stdin: Optional[Iterator] = None
+    def putc_out(self, char: int) -> None:
+        """
+        Put symbol into stdout
+        """
+        sys.stdout.write(chr(char))
 
-    def putc(self, char: int) -> None:
+    def putc_err(self, char: int) -> None:
         """
-        Puts symbol into stdout
+        Put symbol into stderr
         """
-        print(chr(char), end='')
-
-    def _getc(self) -> Iterator[int]:
-        """
-        Generate symbol codes stream from input string
-        """
-        yield from map(ord, sys.stdin.read())
-        yield NULL_TERM
+        sys.stderr.write(chr(char))
 
     def getc(self) -> int:
         """
-        Get symbol from stdout
+        Get symbol from stdint
         """
-        if self.stdin is None:
-            self.stdin = iter(self._getc())
-
-        try:
-            return next(self.stdin)
-        except StopIteration:
-            self.stdin = None
-            return NULL_TERM
-
-    def putn(self, number: int) -> None:
-        """
-        Put number into stdout
-        """
-        print(number, end='')
-
-    def getn(self) -> int:
-        """
-        Get number from stdout
-        """
-        number: str = ''.join(map(chr, self._getc()))
-        result: int = int(number.strip('\x00'))
-        return result
+        char: str = sys.stdin.read(1)
+        if char:
+            return ord(char)
+        return NULL_TERM

@@ -4,7 +4,7 @@ section .data
 
 section .text
     XOR %rax, %rax
-    GETN #MAX_DIVIDER
+    LDN #MAX_DIVIDER, #STDIN
 
     MOV %rax, #STEP
     .find_prime:
@@ -38,6 +38,6 @@ section .text
 
             JMP .next_divider
     .exit:
-        PUTN %rax
-        PUTC '\n'
+        MOVN #STDOUT, %rax
+        MOV #STDOUT, '\n'
         HLT

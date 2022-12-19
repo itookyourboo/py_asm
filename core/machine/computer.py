@@ -29,11 +29,10 @@ class Computer:
         self.alu = ALU()
         self.io_controller = IOController()
         self.r_controller = RegisterController()
-        self.m_controller = MemoryController()
+        self.m_controller = MemoryController(self.io_controller)
         self.instruction_executor = InstructionController(
             self.clock,
             self.alu,
-            self.io_controller,
             self.m_controller,
             self.r_controller
         )
