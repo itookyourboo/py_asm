@@ -15,7 +15,6 @@ class IOController:
 
     def __init__(self) -> None:
         self.stdin: Optional[Iterator] = None
-        self.stdout: Optional[Iterator] = None
 
     def putc(self, char: int) -> None:
         """

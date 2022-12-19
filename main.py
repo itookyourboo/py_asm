@@ -73,7 +73,7 @@ def execute(
             print(str(ex.instruction_executor.current))
             print('Registers:', ex.r_controller)
             print('ALU', ex.alu)
-            print('Memory:', ex.m_controller)
+            # print('Memory:', ex.m_controller)
             print('Clock:', ex.clock)
     if catcher.exception:
         print_exception(catcher.exception)

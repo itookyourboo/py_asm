@@ -1,13 +1,13 @@
 section .data
     NULL_TERM: 0x00
-    HELLO: "hello world\n"
+    HELLO: "hello world"
 
 section .text
     .print_char:
         LD %rdx, #HELLO[%rdi]
-        PUTC %rdx
         CMP %rdx, #NULL_TERM
         JE .exit
+        PUTC %rdx
         INC %rdi
         JMP .print_char
     .exit:
