@@ -157,7 +157,7 @@ section .data
 ```
 section .text
     .print_char:                        ; метка
-        LD %rdx, #ARRAY[%rdi]           ; загрузить
+        MOV %rdx, #ARRAY[%rdi]          ; загрузить
                                         ; в регистр RDX
                                         ; значение ARRAY[RDI]
                                         ; (косвенная адресация) 
@@ -334,7 +334,9 @@ Program:
 
 ## Модель процессора
 
-Все составляющие реализованы в модуле `core.machine`. 
+![docs/computer_diagram.jpeg](docs/computer_diagram.jpeg)
+
+Все составляющие реализованы в модуле `core.machine`.
 
 [Компьютер](core/machine/computer.py) состоит из следующих частей:
 
@@ -344,10 +346,10 @@ Program:
 
 Арифметико-логическое устройство. Все операции происходят через него, после каждой операции ставятся флаги:
 
-- N (отрицательное число, единица в старшем бите)
-- Z (нуль)
-- V (переполнение)
-- C (перенос единицы в бит, следующим за старшим)
+- N (negative | отрицательное число, единица в старшем бите)
+- Z (zero | нуль)
+- V (overflow | переполнение)
+- C (carry | перенос единицы в бит, следующим за старшим)
 
 ### Тактовый генератор
 
@@ -435,7 +437,7 @@ ADD x1, x2, x3, x4, x5  ; (((x2 + x3) + x4) + x5) -> x1
 Тестирование алгоритмов приведено в файле [test/test_pyasm.py](test/test_pyasm.py)
 
 ```shell
-$ python3 main.py run test/examples/prob5.pyasm --trace tick > analyze.txt 
+$ python3 main.py run test/examples/prob5.pyasm --trace tick > test/examples/prob5.pyasm.log 
 20
 $ python3 main.py run test/examples/cat.pyasm --trace tick > test/examples/cat.pyasm.log
 foo
