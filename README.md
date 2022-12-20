@@ -456,11 +456,12 @@ $ python3 main.py run test/examples/hello.pyasm --trace tick > test/examples/hel
 
 ### Тесты
 
-Пока на данный момент есть тесты на:
+На данный момент есть тесты на:
 
 - Препроцессинг (удаление лишних символов и комментариев)
 - Транслятор (сериализация, обработка операндов и инструкций)
 - Алгоритмы выше (соответствие вводу-выводу)
+- АЛУ (проверка корректности определения флагов N, Z, V, C)
 
 ### CI
 
@@ -492,17 +493,19 @@ $ ./ci.sh
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 ======MYPY======
-Success: no issues found in 22 source files
+Success: no issues found in 23 source files
 ==[TESTING]==
 ====UNIT-TESTS====
-============================================= test session starts ==============================================
+============================================ test session starts ============================================
 platform linux -- Python 3.10.6, pytest-7.2.0, pluggy-1.0.0
 rootdir: /home/wignorbo/PycharmProjects/py_asm
-collected 10 items                                                                                             
+plugins: subtests-0.9.0
+collected 14 items                                                                                          
 
-test/test_preprocessing.py ...                                                                           [ 30%]
-test/test_pyasm.py ...                                                                                   [ 60%]
-test/test_translator.py ....                                                                             [100%]
+test/test_alu.py ....                                                                                 [ 28%]
+test/test_preprocessing.py ...                                                                        [ 50%]
+test/test_pyasm.py ...                                                                                [ 71%]
+test/test_translator.py ....                                                                          [100%]
 
-============================================== 10 passed in 0.79s ==============================================
+============================================ 14 passed in 0.88s =============================================
 ```

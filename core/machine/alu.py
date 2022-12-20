@@ -41,7 +41,7 @@ def _get_zero(number: int) -> bool:
     """
     Check number if it's zero
     """
-    return number == 0
+    return (number & ((1 << N_BITS) - 1)) == 0
 
 
 def _get_overflow(number: int) -> bool:
@@ -62,6 +62,8 @@ def _get_carry(number: int) -> bool:
     """
     Check if the number's (N_BITS)-th bit is set
     """
+    if number < 0:
+        return not bool(number & (1 << N_BITS))
     return bool(number & (1 << N_BITS))
 
 
