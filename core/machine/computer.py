@@ -65,5 +65,7 @@ class Computer:
                 elif trace == Trace.TICK:
                     for _ in gen:
                         yield self
+                else:
+                    [*_] = gen
             except ProgramExit:
                 return
