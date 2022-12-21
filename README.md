@@ -332,6 +332,76 @@ Program:
 
 Если явно не указать имя объектного файла, то появится файл prob5.pyasm.o, который содержит сериализованное с помощью модуля `pickle` дерево. Весит намного меньше обычного JSON.
 
+Как выглядит изначальный код:
+
+```text
+section .data
+    NULL_TERM: 0x00
+    HELLO: "hello world"
+
+section .text
+    .print_char:
+        MOV %rdx, #HELLO[%rdi]
+        CMP %rdx, #NULL_TERM
+        JE .exit
+        MOV #STDOUT, %rdx
+        INC %rdi
+        JMP .print_char
+    .exit:
+        HLT
+```
+
+Как выглядит объектный файл после трансляции:
+
+```python
+>>> from pprint import pprint
+>>> program = read_program_from_file('../test/examples/hello.pyasm.o')
+>>> pprint(program)
+Program(data=DataSection(var_to_addr={'HELLO': 4,
+                                      'NULL_TERM': 3,
+                                      'STDERR': 2,
+                                      'STDIN': 0,
+                                      'STDOUT': 1},
+                         memory=[0,
+                                 0,
+                                 0,
+                                 0,
+                                 104,
+                                 101,
+                                 108,
+                                 108,
+                                 111,
+                                 32,
+                                 119,
+                                 111,
+                                 114,
+                                 108,
+                                 100,
+                                 0]),
+        text=TextSection(labels={'.exit': 6, '.print_char': 0},
+                         lines=[Instruction(name='mov',
+                                            operands=[Register(name='RDX'),
+                                                      IndirectAddress(offset=Register(name='RDI'),
+                                                                      label='HELLO')]),
+                                Instruction(name='cmp',
+                                            operands=[Register(name='RDX'),
+                                                      Address(value=3,
+                                                              label='NULL_TERM')]),
+                                Instruction(name='je',
+                                            operands=[Label(name='.exit',
+                                                            value=6)]),
+                                Instruction(name='mov',
+                                            operands=[Address(value=1,
+                                                              label='STDOUT'),
+                                                      Register(name='RDX')]),
+                                Instruction(name='inc',
+                                            operands=[Register(name='RDI')]),
+                                Instruction(name='jmp',
+                                            operands=[Label(name='.print_char',
+                                                            value=0)]),
+                                Instruction(name='hlt', operands=[])]))
+```
+
 ## Модель процессора
 
 ![docs/computer_diagram.jpeg](docs/computer_diagram.jpeg)
@@ -494,19 +564,20 @@ $ ./ci.sh
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 ======MYPY======
-Success: no issues found in 23 source files
+Success: no issues found in 24 source files
 ==[TESTING]==
 ====UNIT-TESTS====
-============================================ test session starts ============================================
+=========================================== test session starts ===========================================
 platform linux -- Python 3.10.6, pytest-7.2.0, pluggy-1.0.0
 rootdir: /home/wignorbo/PycharmProjects/py_asm
 plugins: subtests-0.9.0
-collected 14 items                                                                                          
+collected 17 items                                                                                        
 
-test/test_alu.py ....                                                                                 [ 28%]
-test/test_preprocessing.py ...                                                                        [ 50%]
-test/test_pyasm.py ...                                                                                [ 71%]
-test/test_translator.py ....                                                                          [100%]
+test/test_alu.py ....                                                                               [ 23%]
+test/test_instructions.py ...                                                                       [ 41%]
+test/test_preprocessing.py ...                                                                      [ 58%]
+test/test_pyasm.py ...                                                                              [ 76%]
+test/test_translator.py ....                                                                        [100%]
 
-============================================ 14 passed in 0.88s =============================================
+=========================================== 17 passed in 1.02s ============================================
 ```
