@@ -56,13 +56,14 @@ class Computer:
         ):
             try:
                 current_instruction = code.lines[pointer]
-                [*ticks] = (
+                gen: Iterator = (
                     self.instruction_executor.execute(current_instruction)
                 )
                 if trace == Trace.INST:
+                    [*_] = gen
                     yield self
                 elif trace == Trace.TICK:
-                    for _ in ticks:
+                    for _ in gen:
                         yield self
             except ProgramExit:
                 return
