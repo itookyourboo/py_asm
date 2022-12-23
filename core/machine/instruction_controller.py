@@ -8,7 +8,7 @@ from typing import Callable, Optional, Iterator, Iterable
 from core.machine.alu import ALU, Flag
 from core.machine.clock import ClockGenerator
 from core.exceptions import (
-    OperandIsNotWriteable, ProgramExit, NotEnoughOperands
+    OperandIsNotWriteable, ProgramExit
 )
 from core.machine.config import NULL_TERM
 from core.machine.memory_controller import MemoryController
@@ -22,8 +22,14 @@ from core.machine.register_controller import RegisterController
 class InstructionController:
     """
     Instruction Controller class
-        - current   -- the current executing instruction
+        - current       -- the current executing instruction
+        - current_sub   -- the current executing sub instruction
     """
+
+    __reduce_ops__ = {
+        'add', 'sub', 'mul', 'div',
+        'mod', 'xor', 'and', 'or',
+    }
 
     def __init__(
             self,
@@ -33,6 +39,8 @@ class InstructionController:
             registers: RegisterController
     ) -> None:
         self.current: Optional[Instruction] = None
+        self.current_sub: Optional[Instruction] = None
+
         self.clock = clock
         self.alu = alu
         self.memory = memory
@@ -107,35 +115,14 @@ class InstructionController:
             - Three and more operands.
                 Apply reducer to "*operands" and save result into "dest"
         """
-        op_count: int = len(operands)
-        if op_count < 1:
-            raise NotEnoughOperands
 
-        result: int
-        if op_count == 1:
-            # First case:
-            #   ADD OP1, OP2
-            #   OP1 + OP2 --> OP1
-            result = self.get_operand_value(dest)
-        else:
-            # Second case:
-            #   ADD DEST, OP1, OP2, ...
-            #   OP1 + OP2 + ... -> DEST
-            result = self.get_operand_value(operands[0])
-            operands = operands[1:]
-
-        # get_operand_value -> tick
+        result = self.alu.operation(
+            reducer,
+            self.get_operand_value(dest),
+            self.get_operand_value(operands[0])
+        )
         self.clock.tick()
         yield
-
-        for operand in operands:
-            operand_value: int = self.get_operand_value(operand)
-            # send data to ALU and get result
-            result = self.alu.operation(reducer, result, operand_value)
-            # apply operation -> tick
-            self.clock.tick()
-            yield
-
         self.set_operand_value(dest, result)
 
     def _jmp_if(self, label: Label, condition: bool) -> None:
@@ -412,16 +399,31 @@ class InstructionController:
         yield
         raise ProgramExit
 
+    def __execute(self, instruction: Instruction) -> Iterator | None:
+        result = self.get_all()[instruction.name](
+            self, *instruction.operands
+        )
+        if isinstance(result, Iterable):
+            yield from result
+
     def execute(self, instruction: Instruction) -> Iterator:
         """
         Execute instruction by its name
         """
         self.current = instruction
-        name: str = self.current.name
-        # map needed function by name and call it
-        result = self.get_all()[name](self, *instruction.operands)
-        if isinstance(result, Iterable):
-            yield from result
+        self.current_sub = None
+
+        if self.current.sub:
+            for sub_instruction in self.current.sub:
+                self.current_sub = sub_instruction
+                result = self.__execute(sub_instruction)
+                if isinstance(result, Iterable):
+                    yield from result
+        else:
+            result = self.__execute(instruction)
+            if isinstance(result, Iterable):
+                yield from result
+
         # increment instruction pointer (next instruction)
         self.registers.set_instruction_pointer(
             self.registers.get_instruction_pointer() + 1

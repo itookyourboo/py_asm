@@ -8,8 +8,9 @@ from core.machine.config import NULL_TERM, STDIN, STDOUT, STDERR
 from core.exceptions import (
     UndefinedInstruction, UndefinedLOC, UnexpectedOperand,
     UnexpectedDataValue, TextSectionNotFound, NoSuchLabel,
-    OperandMustBeCharNotString
+    OperandMustBeCharNotString, NotEnoughOperands
 )
+from core.machine.instruction_controller import InstructionController
 from core.model import (
     Instruction, LOC, Label, Operand,
     Program, Address, DataSection, Constant,
@@ -87,6 +88,7 @@ def parse_instruction(line: str) -> Instruction:
     instruction: Instruction = Instruction(cmd.lower())
     operands: list[Operand] = parse_operands(operands_str)
     instruction.operands.extend(operands)
+    instruction.sub = linearize_instruction(instruction)
 
     return instruction
 
@@ -270,3 +272,28 @@ def parse_code(code: str) -> Program:
     set_addresses_indexes(program.text.lines, program.data.var_to_addr)
 
     return program
+
+
+def linearize_instruction(instruction: Instruction) -> list[Instruction]:
+    """
+    Translate complex instruction into several simple instructions
+    """
+    if instruction.name in InstructionController.__reduce_ops__:
+        operands: list[Operand] = instruction.operands
+        op_num: int = len(operands)
+        if op_num < 2:
+            raise NotEnoughOperands
+
+        if op_num == 2:
+            return [Instruction(instruction.name, instruction.operands)]
+
+        dest: Operand = operands[0]
+        result: list[Instruction] = [
+            Instruction('mov', [dest, operands[1]])
+        ]
+        for operand in operands[2:]:
+            result.append(Instruction(
+                instruction.name, [dest, operand]
+            ))
+        return result
+    return []

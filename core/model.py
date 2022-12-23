@@ -112,6 +112,7 @@ class Instruction(LOC):
     """
     name: str
     operands: list[Operand] = field(default_factory=list)
+    sub: list['Instruction'] = field(default_factory=list)
 
     def __str__(self) -> str:
         op_str: str = ', '.join(map(str, self.operands))

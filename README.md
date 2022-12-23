@@ -193,6 +193,8 @@ ADD %RAX, #VAR, 0xf1        ; #VAR + 0xf1        -> %RAX
 ADD %RAX, #VAR, 0xf1, %RDX  ; #VAR + 0xf1 + %RDX -> %RAX
 ```
 
+На этапе трансляции сложная инструкция преобразуется в несколько простых.
+
 [Полный список инструкций](docs/instructions.md)
 
 ### Операнды
@@ -327,6 +329,7 @@ Program:
     - CodeSection
         - Instruction[]
             - Operand[]
+            - Instruction[]
 ```
 
 Сам парсинг и валидация происходят с помощью регулярных выражений и обычных преобразований со строками.
@@ -356,51 +359,165 @@ section .text
 
 ```python
 >>> from pprint import pprint
->>> program = read_program_from_file('../test/examples/hello.pyasm.o')
+>>> program = read_program_from_file('../test/examples/prob5.pyasm.o')
 >>> pprint(program)
-Program(data=DataSection(var_to_addr={'HELLO': 4,
-                                      'NULL_TERM': 3,
+Program(data=DataSection(var_to_addr={'MAX_DIVIDER': 3,
                                       'STDERR': 2,
                                       'STDIN': 0,
-                                      'STDOUT': 1},
-                         memory=[0,
-                                 0,
-                                 0,
-                                 0,
-                                 104,
-                                 101,
-                                 108,
-                                 108,
-                                 111,
-                                 32,
-                                 119,
-                                 111,
-                                 114,
-                                 108,
-                                 100,
-                                 0]),
-        text=TextSection(labels={'.exit': 6, '.print_char': 0},
-                         lines=[Instruction(name='mov',
+                                      'STDOUT': 1,
+                                      'STEP': 4},
+                         memory=[0, 0, 0, 20, 2]),
+        text=TextSection(labels={'.check_mod': 7,
+                                 '.exit': 24,
+                                 '.find_number': 15,
+                                 '.find_prime': 3,
+                                 '.mul_step': 13,
+                                 '.next_divider': 18,
+                                 '.next_number': 16},
+                         lines=[Instruction(name='xor',
+                                            operands=[Register(name='RAX'),
+                                                      Register(name='RAX')],
+                                            sub=[Instruction(name='xor',
+                                                             operands=[Register(name='RAX'),
+                                                                       Register(name='RAX')],
+                                                             sub=[])]),
+                                Instruction(name='ldn',
+                                            operands=[Address(value=3,
+                                                              label='MAX_DIVIDER'),
+                                                      Address(value=0,
+                                                              label='STDIN')],
+                                            sub=[]),
+                                Instruction(name='mov',
+                                            operands=[Register(name='RAX'),
+                                                      Address(value=4,
+                                                              label='STEP')],
+                                            sub=[]),
+                                Instruction(name='inc',
+                                            operands=[Register(name='RAX')],
+                                            sub=[]),
+                                Instruction(name='cmp',
+                                            operands=[Register(name='RAX'),
+                                                      Address(value=3,
+                                                              label='MAX_DIVIDER')],
+                                            sub=[]),
+                                Instruction(name='jg',
+                                            operands=[Label(name='.find_number',
+                                                            value=15)],
+                                            sub=[]),
+                                Instruction(name='mov',
                                             operands=[Register(name='RDX'),
-                                                      IndirectAddress(offset=Register(name='RDI'),
-                                                                      label='HELLO')]),
+                                                      Constant(value=2)],
+                                            sub=[]),
+                                Instruction(name='mod',
+                                            operands=[Register(name='RBX'),
+                                                      Register(name='RAX'),
+                                                      Register(name='RDX')],
+                                            sub=[Instruction(name='mov',
+                                                             operands=[Register(name='RBX'),
+                                                                       Register(name='RAX')],
+                                                             sub=[]),
+                                                 Instruction(name='mod',
+                                                             operands=[Register(name='RBX'),
+                                                                       Register(name='RDX')],
+                                                             sub=[])]),
+                                Instruction(name='je',
+                                            operands=[Label(name='.find_prime',
+                                                            value=3)],
+                                            sub=[]),
+                                Instruction(name='inc',
+                                            operands=[Register(name='RDX')],
+                                            sub=[]),
+                                Instruction(name='cmp',
+                                            operands=[Register(name='RAX'),
+                                                      Register(name='RDX')],
+                                            sub=[]),
+                                Instruction(name='je',
+                                            operands=[Label(name='.mul_step',
+                                                            value=13)],
+                                            sub=[]),
+                                Instruction(name='jmp',
+                                            operands=[Label(name='.check_mod',
+                                                            value=7)],
+                                            sub=[]),
+                                Instruction(name='mul',
+                                            operands=[Address(value=4,
+                                                              label='STEP'),
+                                                      Register(name='RAX')],
+                                            sub=[Instruction(name='mul',
+                                                             operands=[Address(value=4,
+                                                                               label='STEP'),
+                                                                       Register(name='RAX')],
+                                                             sub=[])]),
+                                Instruction(name='jmp',
+                                            operands=[Label(name='.find_prime',
+                                                            value=3)],
+                                            sub=[]),
+                                Instruction(name='xor',
+                                            operands=[Register(name='RAX'),
+                                                      Register(name='RAX')],
+                                            sub=[Instruction(name='xor',
+                                                             operands=[Register(name='RAX'),
+                                                                       Register(name='RAX')],
+                                                             sub=[])]),
+                                Instruction(name='add',
+                                            operands=[Register(name='RAX'),
+                                                      Address(value=4,
+                                                              label='STEP')],
+                                            sub=[Instruction(name='add',
+                                                             operands=[Register(name='RAX'),
+                                                                       Address(value=4,
+                                                                               label='STEP')],
+                                                             sub=[])]),
+                                Instruction(name='xor',
+                                            operands=[Register(name='RDX'),
+                                                      Register(name='RDX')],
+                                            sub=[Instruction(name='xor',
+                                                             operands=[Register(name='RDX'),
+                                                                       Register(name='RDX')],
+                                                             sub=[])]),
+                                Instruction(name='inc',
+                                            operands=[Register(name='RDX')],
+                                            sub=[]),
+                                Instruction(name='mod',
+                                            operands=[Register(name='RBX'),
+                                                      Register(name='RAX'),
+                                                      Register(name='RDX')],
+                                            sub=[Instruction(name='mov',
+                                                             operands=[Register(name='RBX'),
+                                                                       Register(name='RAX')],
+                                                             sub=[]),
+                                                 Instruction(name='mod',
+                                                             operands=[Register(name='RBX'),
+                                                                       Register(name='RDX')],
+                                                             sub=[])]),
+                                Instruction(name='jne',
+                                            operands=[Label(name='.next_number',
+                                                            value=16)],
+                                            sub=[]),
                                 Instruction(name='cmp',
                                             operands=[Register(name='RDX'),
                                                       Address(value=3,
-                                                              label='NULL_TERM')]),
+                                                              label='MAX_DIVIDER')],
+                                            sub=[]),
                                 Instruction(name='je',
                                             operands=[Label(name='.exit',
-                                                            value=6)]),
+                                                            value=24)],
+                                            sub=[]),
+                                Instruction(name='jmp',
+                                            operands=[Label(name='.next_divider',
+                                                            value=18)],
+                                            sub=[]),
+                                Instruction(name='movn',
+                                            operands=[Address(value=1,
+                                                              label='STDOUT'),
+                                                      Register(name='RAX')],
+                                            sub=[]),
                                 Instruction(name='mov',
                                             operands=[Address(value=1,
                                                               label='STDOUT'),
-                                                      Register(name='RDX')]),
-                                Instruction(name='inc',
-                                            operands=[Register(name='RDI')]),
-                                Instruction(name='jmp',
-                                            operands=[Label(name='.print_char',
-                                                            value=0)]),
-                                Instruction(name='hlt', operands=[])]))
+                                                      Constant(value=10)],
+                                            sub=[]),
+                                Instruction(name='hlt', operands=[], sub=[])]))
 ```
 
 ## Модель процессора
@@ -515,14 +632,22 @@ foo
 $ python3 main.py run test/examples/hello.pyasm --trace tick > test/examples/hello.pyasm.log
 ```
 
+или так (`./trace.sh`):
+
+```shell
+$ echo 20 | python3 main.py run test/examples/prob5.pyasm --trace tick > test/examples/prob5.pyasm.log
+$ echo -e 'foo\n' | python3 main.py run test/examples/cat.pyasm --trace tick > test/examples/cat.pyasm.log
+$ python3 main.py run test/examples/hello.pyasm --trace tick > test/examples/hello.pyasm.log
+```
+
 Посмотреть журналы и исходные коды можно в папке [test/examples](test/examples).
 
 
 | ФИО            | алг.  | LoC | code байт | code инстр. | инстр. | такт. | 
 |----------------|-------|-----|-----------|-------------|--------|-------|
-| Харламов А.С.  | cat   | 12  | 643       | 6           | 23     | 32    |
-|                | hello | 14  | 765       | 7           | 69     | 103   |
-|                | prob5 | 43  | 1965      | 27          | 1468   | 2345  |
+| Харламов А.С.  | cat   | 12  | 643       | 6           | 28     | 40    |
+|                | hello | 14  | 765       | 7           | 69     | 104   |
+|                | prob5 | 43  | 1965      | 27          | 1468   | 2289  |
 
 
 ### Тесты

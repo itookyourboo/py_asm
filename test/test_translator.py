@@ -105,6 +105,22 @@ class TestTranslator(TestCase):
                     Register('RAX'),
                     Constant(5),
                     Address(label='X')
+                ],
+                sub=[
+                    Instruction(
+                        name='mov',
+                        operands=[
+                            Register('RAX'),
+                            Constant(5)
+                        ]
+                    ),
+                    Instruction(
+                        name='add',
+                        operands=[
+                            Register('RAX'),
+                            Address(label='X')
+                        ]
+                    )
                 ]
             ),
             'XOR %rax, %RBX': Instruction(
@@ -112,6 +128,15 @@ class TestTranslator(TestCase):
                 operands=[
                     Register('RAX'),
                     Register('RBX')
+                ],
+                sub=[
+                    Instruction(
+                        name='xor',
+                        operands=[
+                            Register('RAX'),
+                            Register('RBX')
+                        ]
+                    )
                 ]
             ),
             'INC #X': Instruction(
