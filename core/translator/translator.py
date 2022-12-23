@@ -236,6 +236,8 @@ def set_addresses_indexes(
 _SECTION_TEXT = 'section .text'
 _SECTION_DATA = 'section .data'
 
+_TILL_THE_END = None
+
 
 def parse_code(code: str) -> Program:
     """
@@ -245,7 +247,7 @@ def parse_code(code: str) -> Program:
     if text_index == -1:
         raise TextSectionNotFound
 
-    text_start, text_stop = text_index + len(_SECTION_TEXT) + 1, None
+    text_start, text_stop = text_index + len(_SECTION_TEXT) + 1, _TILL_THE_END
 
     data_index: int = code.find(_SECTION_DATA)
     if data_index == -1:
@@ -253,7 +255,7 @@ def parse_code(code: str) -> Program:
             text=parse_text_section(code[text_start:text_stop])
         )
 
-    data_start, data_stop = data_index + len(_SECTION_DATA) + 1, None
+    data_start, data_stop = data_index + len(_SECTION_DATA) + 1, _TILL_THE_END
 
     if text_index < data_index:
         text_stop = data_index - 1
