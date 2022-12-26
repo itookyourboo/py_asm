@@ -56,13 +56,11 @@ class InstructionController:
             - Constant: just get value
         """
         if isinstance(operand, IndirectAddress):
+            offset: int = self.get_operand_value(operand.offset)
             return self.memory.get(
                 Address(
                     label=operand.label,
-                    value=(
-                            operand.value +
-                            self.get_operand_value(operand.offset)
-                    )
+                    value=(operand.value + offset)
                 )
             )
         if isinstance(operand, Address):
@@ -80,14 +78,12 @@ class InstructionController:
             - Other: throw OperandIsNotWriteable
         """
         if isinstance(operand, IndirectAddress):
+            offset: int = self.get_operand_value(operand.offset)
             self.memory.set(
                 Address(
                     label=operand.label,
-                    value=(
-                            operand.value +
-                            self.get_operand_value(operand.offset)
-                    )),
-                value
+                    value=(operand.value + offset)
+                ), value
             )
         elif isinstance(operand, Address):
             self.memory.set(operand, value)
@@ -95,6 +91,19 @@ class InstructionController:
             self.registers.set(operand, value)
         else:
             raise OperandIsNotWriteable(operand.value)
+
+    def _same_bus(self, op1: Operand, op2: Operand) -> bool:
+        """
+        Check if operands fetching require the same bus:
+            - memory bus
+            - register bus
+        """
+        return (
+                isinstance(op1, (Address, IndirectAddress)) and
+                isinstance(op2, (Address, IndirectAddress))
+        ) or (
+                isinstance(op1, Register) and isinstance(op2, Register)
+        )
 
     def _jump_to(self, label: Label) -> None:
         """
@@ -115,12 +124,16 @@ class InstructionController:
             - Three and more operands.
                 Apply reducer to "*operands" and save result into "dest"
         """
-
-        result = self.alu.operation(
-            reducer,
-            self.get_operand_value(dest),
-            self.get_operand_value(operands[0])
-        )
+        operand: Source = operands[0]
+        op1: int = self.get_operand_value(dest)
+        # if operands require the same bus
+        if self._same_bus(dest, operand):
+            self.clock.tick()
+            yield
+        op2: int = self.get_operand_value(operand)
+        self.clock.tick()
+        yield
+        result = self.alu.operation(reducer, op1, op2)
         self.clock.tick()
         yield
         self.set_operand_value(dest, result)
@@ -377,17 +390,21 @@ class InstructionController:
             yield
         self.set_operand_value(dest, int(result))
 
-    def i_cmp(self, var: Source, src: Source) -> None:
+    def i_cmp(self, var: Source, src: Source) -> Iterator:
         """
         CMP op1, op2
 
         Compare two operands by subtracting and set flags
         """
-        self.alu.operation(
-            operator.sub,
-            self.get_operand_value(var),
-            self.get_operand_value(src)
-        )
+        op1: int = self.get_operand_value(var)
+        # if operands require the same bus
+        if self._same_bus(var, src):
+            self.clock.tick()
+            yield
+        op2: int = self.get_operand_value(src)
+        self.clock.tick()
+        yield
+        self.alu.operation(operator.sub, op1, op2)
 
     def i_hlt(self) -> Iterator:
         """

@@ -69,3 +69,14 @@ class Computer:
                     [*_] = gen
             except ProgramExit:
                 return
+
+    def __str__(self):
+        lines: list[str] = [
+            f'- INS: {self.instruction_executor.current}'
+        ]
+        if self.instruction_executor.current_sub:
+            lines.append(f'- SUB: {self.instruction_executor.current_sub}')
+        lines.append(f'- REG: {self.r_controller}')
+        lines.append(f'- ALU: {self.alu}')
+        lines.append(f'- CLK: {self.clock}')
+        return '\n'.join(lines)

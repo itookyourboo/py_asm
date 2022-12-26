@@ -522,7 +522,7 @@ Program(data=DataSection(var_to_addr={'MAX_DIVIDER': 3,
 
 ## Модель процессора
 
-![docs/computer_diagram.jpeg](docs/computer_diagram.jpeg)
+![docs/draft_computer_diagram.jpeg](docs/draft_computer_diagram.jpeg)
 
 Все составляющие реализованы в модуле `core.machine`.
 
@@ -625,19 +625,27 @@ ADD x1, x2, x3, x4, x5  ; (((x2 + x3) + x4) + x5) -> x1
 Тестирование алгоритмов приведено в файле [test/test_pyasm.py](test/test_pyasm.py)
 
 ```shell
-$ python3 main.py run test/examples/prob5.pyasm --trace tick > test/examples/prob5.pyasm.log 
+$ python3 main.py run test/examples/prob5.pyasm --trace tick 2> test/examples/prob5.pyasm.log 
 20
-$ python3 main.py run test/examples/cat.pyasm --trace tick > test/examples/cat.pyasm.log
+232792560
+$ python3 main.py run test/examples/cat.pyasm --trace tick 2> test/examples/cat.pyasm.log
 foo
-$ python3 main.py run test/examples/hello.pyasm --trace tick > test/examples/hello.pyasm.log
+foo
+
+$ python3 main.py run test/examples/hello.pyasm --trace tick 2> test/examples/hello.pyasm.log
+hello world
 ```
 
 или так (`./trace.sh`):
 
 ```shell
-$ echo 20 | python3 main.py run test/examples/prob5.pyasm --trace tick > test/examples/prob5.pyasm.log
-$ echo -e 'foo\n' | python3 main.py run test/examples/cat.pyasm --trace tick > test/examples/cat.pyasm.log
-$ python3 main.py run test/examples/hello.pyasm --trace tick > test/examples/hello.pyasm.log
+$ echo 20 | python3 main.py run test/examples/prob5.pyasm --trace tick 2> test/examples/prob5.pyasm.log
+232792560
+$ echo -e 'foo\n' | python3 main.py run test/examples/cat.pyasm --trace tick 2> test/examples/cat.pyasm.log
+foo
+
+$ python3 main.py run test/examples/hello.pyasm --trace tick 2> test/examples/hello.pyasm.log
+hello world
 ```
 
 Посмотреть журналы и исходные коды можно в папке [test/examples](test/examples).
@@ -645,9 +653,9 @@ $ python3 main.py run test/examples/hello.pyasm --trace tick > test/examples/hel
 
 | ФИО            | алг.  | LoC | code байт | code инстр. | инстр. | такт. | 
 |----------------|-------|-----|-----------|-------------|--------|-------|
-| Харламов А.С.  | cat   | 12  | 643       | 6           | 28     | 40    |
-|                | hello | 14  | 765       | 7           | 69     | 104   |
-|                | prob5 | 43  | 1965      | 27          | 1468   | 2289  |
+| Харламов А.С.  | cat   | 12  | 643       | 6           | 28     | 46    |
+|                | hello | 14  | 765       | 7           | 69     | 116   |
+|                | prob5 | 43  | 1965      | 27          | 1468   | 3143  |
 
 
 ### Тесты

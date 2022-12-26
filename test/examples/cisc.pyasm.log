@@ -1,0 +1,140 @@
+- INS: MOV %RAX, 1234567890
+- REG: {'RAX': 0, 'RBX': 0, 'RDX': 0, 'RSX': 0, 'RIP': 0, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 1, inst: 0
+
+- INS: MOV %RAX, 1234567890
+- REG: {'RAX': 1234567890, 'RBX': 0, 'RDX': 0, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 2, inst: 1
+
+- INS: AND %RBX, %RAX, #MASK_L
+- SUB: MOV %RBX, %RAX
+- REG: {'RAX': 1234567890, 'RBX': 0, 'RDX': 0, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 3, inst: 1
+
+- INS: AND %RBX, %RAX, #MASK_L
+- SUB: AND %RBX, #MASK_L
+- REG: {'RAX': 1234567890, 'RBX': 1234567890, 'RDX': 0, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 4, inst: 1
+
+- INS: AND %RBX, %RAX, #MASK_L
+- SUB: AND %RBX, #MASK_L
+- REG: {'RAX': 1234567890, 'RBX': 1234567890, 'RDX': 0, 'RSX': 0, 'RIP': 1, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 5, inst: 1
+
+- INS: AND %RBX, %RAX, #MASK_L
+- SUB: AND %RBX, #MASK_L
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 0, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 6, inst: 2
+
+- INS: MUL %RDX, %RAX, #MASK_H, 5
+- SUB: MOV %RDX, %RAX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 0, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 7, inst: 2
+
+- INS: MUL %RDX, %RAX, #MASK_H, 5
+- SUB: MUL %RDX, #MASK_H
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 1234567890, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 8, inst: 2
+
+- INS: MUL %RDX, %RAX, #MASK_H, 5
+- SUB: MUL %RDX, #MASK_H
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 1234567890, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': True, 'Z': False, 'V': True, 'C': True}
+- CLK: tick: 9, inst: 2
+
+- INS: MUL %RDX, %RAX, #MASK_H, 5
+- SUB: MUL %RDX, 5
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 47316992, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': True, 'Z': False, 'V': True, 'C': True}
+- CLK: tick: 10, inst: 2
+
+- INS: MUL %RDX, %RAX, #MASK_H, 5
+- SUB: MUL %RDX, 5
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 47316992, 'RSX': 0, 'RIP': 2, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 11, inst: 2
+
+- INS: MUL %RDX, %RAX, #MASK_H, 5
+- SUB: MUL %RDX, 5
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 12, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 13, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 14, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 15, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 16, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 17, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 18, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 19, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 20, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 21, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 3, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 22, inst: 3
+
+- INS: MOVN #STDOUT, %RDX
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 23, inst: 4
+
+- INS: MOV #STDOUT, 10
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 4, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 24, inst: 4
+
+- INS: MOV #STDOUT, 10
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 25, inst: 5
+
+- INS: HLT 
+- REG: {'RAX': 1234567890, 'RBX': 722, 'RDX': 236584960, 'RSX': 0, 'RIP': 5, 'RSI': 0, 'RDI': 0}
+- ALU: {'N': False, 'Z': False, 'V': False, 'C': False}
+- CLK: tick: 26, inst: 5
+

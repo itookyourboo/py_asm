@@ -1,0 +1,12 @@
+section .data
+    MASK_H: 0xFFFF0000
+    MASK_L: 0x0000FFFF
+    SHIFT:  8
+
+section .text
+    MOV %rax, 1234567890
+    AND %rbx, %rax, #MASK_L
+    MUL %rdx, %rax, #MASK_H, 5
+    MOVN #STDOUT, %rdx
+    MOV #STDOUT, '\n'
+    HLT

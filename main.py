@@ -55,17 +55,6 @@ def translate(
         sys.exit(1)
 
 
-TRACE_TEMPLATE = (
-    '''
-- INS: {}
-- SUB: {}
-- REG: {}
-- ALU: {}
-- CLK: {}
-    '''
-)
-
-
 @app.command(name="exec")
 def execute(
         obj_file_name: str,
@@ -83,13 +72,7 @@ def execute(
         for ex in computer.execute_program(program, trace):
             if not trace:
                 continue
-            print(TRACE_TEMPLATE.format(
-                ex.instruction_executor.current,
-                ex.instruction_executor.current_sub,
-                ex.r_controller,
-                ex.alu,
-                ex.clock
-            ))
+            print(ex, file=sys.stderr, end='\n\n')
     if catcher.exception:
         print_exception(catcher.exception)
         sys.exit(1)
